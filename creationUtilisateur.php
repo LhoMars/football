@@ -4,6 +4,7 @@
         <?php
         include_once 'includeAll.php';
         getDatabaseConnection();
+        $clubs = getDataFromDataBase("club");
         ?>
     </head>
     <body>
@@ -42,11 +43,19 @@
                  <div class="col-auto my-1">
                     <label class="mr-sm-2" for="inlineFormCustomSelect">Preference</label>
                     <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                      <option selected>Choose...</option>
-                      <option value="1"><?="PHP action"?></option>
+                      <option selected>Selectionner</option>
+                      <?php 
+                      $i=1;
+                      foreach($clubs as $club)
+                      {
+                      ?>
+                      <option value="<?=$i?>"><?=$club['nom_club']?></option>
+                      <?php 
+                      $i++;
+                      }
+                      ?>
                     </select>
                 </div>
-                
                 <button type="submit" class="btn btn-primary">S'enregistrer</button>
             </div>
         </form>

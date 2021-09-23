@@ -9,6 +9,7 @@ include_once 'php/function.php';
 <link href="style/bootstrap/css/bootstrap-utilities.min.css" rel="stylesheet" type="text/css"/>
 <link href="style/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 
+<link href="style/testScroll.css" rel="stylesheet" type="text/css"/>
 <?php // Ajout fontawesome
 ?>
 
