@@ -8,9 +8,6 @@
     <body>
         <p>
             <?php dump($_SERVER);?>
-        </p>
-        fsze
-        <p>
-
+		</p>
     </body>
 </html>
