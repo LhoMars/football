@@ -1,6 +1,8 @@
 <?php
 
-function print_r2($t)
+require_once'variable.php';
+
+function dump($t)
 {
     print_r('<pre>');
     print_r($t);

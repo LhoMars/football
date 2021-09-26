@@ -1,63 +1,116 @@
 <html>
     <head>
-        <title>Création utilisateur</title>
+        <title>Inscription</title>
         <?php
-        include_once 'includeAll.php';
+        include_once 'php/includeAll.php';
         getDatabaseConnection();
         $clubs = getDataFromDataBase("club");
         ?>
+        <link href="<?=INCLUDE_DIR?>/style/formulaire.css" rel="stylesheet" type="text/css"/>
     </head>
-    <body>
-        <form action="enregistrementUtilisateur">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="inputNom">Nom</label>
-                    <input type="text" class="form-control" id="inputNom" placeholder="entrer votre nom">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="inputPrenom">Prenom</label>
-                    <input type="text" class="form-control" id="inputPrenom" placeholder="entrer votre prenom">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="inputEmail">Email</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="saisir votre email">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="inputPassword">Mot de passe</label>
-                    <input type="password" class="form-control" id="inputPassword" placeholder=" sasir votre mot de passe">
-                </div>
-                <div class="form-group">
-                    <label for="inputAdresse">Adresse</label>
-                    <input type="text" class="form-control" id="inputAdresse" placeholder="saisir le numéro de la rue et la rue">
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="inputVille">Ville</label>
-                    <input type="text" class="form-control" id="inputVille" placeholder="saisir votre ville">
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="sexe" id="sexeHomme" value="H" checked>
-                    <label class="form-check-label" for="sexeHomme">Homme</label>
-                    <input class="form-check-input" type="radio" name="sexe" id="sexeFemme" value="F">
-                    <label class="form-check-label" for="sexeFemme">Femme</label>
-                </div>
-                 <div class="col-auto my-1">
-                    <label class="mr-sm-2" for="inlineFormCustomSelect">Preference</label>
-                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                      <option selected>Selectionner</option>
-                      <?php 
-                      $i=1;
-                      foreach($clubs as $club)
-                      {
-                      ?>
-                      <option value="<?=$i?>"><?=$club['nom_club']?></option>
-                      <?php 
-                      $i++;
-                      }
-                      ?>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">S'enregistrer</button>
+
+    <div class="form-body">
+        <div class="row">
+            <div id="preview" style="width: 25%; position: absolute; margin: 100px; box-sizing: border-box;">
+
             </div>
-        </form>
-    </body>
+            <div class="form-holder">
+
+                <div class="form-content">
+                    <div class="form-items">
+                        <h3>S'inscrire maintenant</h3>
+                        <p>Saisissez le formulaire</p>
+                        <form name="formulaire" action="" method="post" autocomplete="off">
+
+                            <div class="col-md-12">
+                                <input id="nom" class="form-control" name="nom" type="text" placeholder="Nom">
+                            </div>
+
+                            <div class="col-md-12">
+                                <input id="prenom" class="form-control" name="Prenom" type="text" placeholder="Prenom">
+                            </div>
+
+                            <div class="col-md-12">
+                                <input id="email" class="form-control" name="email" type="email" placeholder="E-mail">
+                            </div>                                
+
+                            <div class="col-md-12">
+                                <input id="password" class="form-control" name="password" type="password"  placeholder="Saisir votre mot de passe">
+                            </div>
+
+                            <div class="col-md-12 mt-3">
+                                <label class="mb-3 mr-1" for="sexe">Sexe : </label>
+
+                                <input id="homme" class="btn-check" type="radio" name="sexe" value="homme">
+                                <label class="btn btn-sm btn-outline-secondary" for="homme">Homme</label>
+
+                                <input id="femme" class="btn-check"type="radio"  name="sexe" value="femme">
+                                <label class="btn btn-sm btn-outline-secondary" for="femme">Femme</label>
+                            </div>      
+
+                            <div class="col-md-12">
+                                <label for="clubFavori"> Choissisez une équipe favorite :</label>
+                                <select id="clubFavori" class="custom-select form-select mt-3" style="overflow:auto"  name="clubFavori">
+                                    <option selected disabled value="">Selectionner</option>
+                                    <?php
+                                    $i = 1;
+                                    foreach ($clubs as $club) {
+                                        ?>
+                                        <option value="<?= $i ?>"><?= $club['nom_club'] ?></option>
+                                        <?php
+                                        $i++;
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="scrollingdiv">
+                                    <label for="clubNews"> Choissisez vos news d'équipe  :</label>
+                                    <div>
+                                        <select id="clubNews" class="image-picker" multiple name="clubNews[]">
+                                            <?php
+                                            $i = 1;
+                                            foreach ($clubs as $club) {
+                                                ?>
+                                                <option style="background-color:#152733"data-img-src="asset/club/<?= $club['nom_club'] ?>2.png" value="<?= $i ?>"><?= $club['nom_club'] ?></option>
+                                                <?php
+                                                $i++;
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                $("#clubNews").imagepicker()
+                            </script>
+                            <div>
+                                <label for="avatar">Choisir une photo de profile :</label>
+                                <input id="avatar" class="form-control" type="file"  name="avatar" accept="image/png, image/jpg, image/jpeg">
+                            </div>
+
+                            <div class="form-button mt-3">
+                                <button id="submit" type="submit" class="btn btn-primary">S'inscrire</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+    if (isset($_POST)) {
+        ?>
+        <div style="background-color: #fff"><?php dump($_POST); ?></div>
+        <?php
+    }
+    ?>
+</body>
+        <script>
+
+            var input = document.querySelector('#avatar');
+            var preview = document.querySelector('#preview');
+            input.addEventListener('change', updateImageDisplay);
+
+        </script>
 </html>
