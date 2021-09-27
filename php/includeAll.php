@@ -5,7 +5,7 @@ require_once 'function.php';
 
 
 // Ajout de bootsrap?>
-<link href="<?=INCLUDE_DIR?>//style/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?=INCLUDE_DIR?>/style/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 <script src="<?=INCLUDE_DIR?>/style/bootstrap/js/bootstrap.js" type="text/javascript"></script>
 
 <?php // Ajout jquery et plugin image picker?>
