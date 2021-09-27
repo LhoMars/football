@@ -6,7 +6,12 @@
         getDatabaseConnection();
         $clubs = getDataFromDataBase("club");
         ?>
-        <link href="<?=INCLUDE_DIR?>/style/formulaire.css" rel="stylesheet" type="text/css"/>
+        <link href="<?= INCLUDE_DIR ?>/style/formulaire.css" rel="stylesheet" type="text/css"/>
+        <style>
+            #clubFavoris{
+                display: none;
+            }
+        </style>
     </head>
 
     <div class="form-body">
@@ -50,18 +55,25 @@
 
                             <div class="col-md-12">
                                 <label for="clubFavori"> Choissisez une équipe favorite :</label>
-                                <select id="clubFavori" class="custom-select form-select mt-3" style="overflow:auto"  name="clubFavori">
+                                <input id="clubFavori" list="clubFavoris" name="clubFavori">
+                                <datalist  id="clubFavoris" class="custom-select form-select mt-3"  name="clubFavoris">
                                     <option selected disabled value="">Selectionner</option>
                                     <?php
                                     $i = 1;
                                     foreach ($clubs as $club) {
                                         ?>
-                                        <option value="<?= $i ?>"><?= $club['nom_club'] ?></option>
+                                        <option value="<?= $i ?>" name="<?= $club['nom_club'] ?>"><?= $club['nom_club'] ?></option>
                                         <?php
                                         $i++;
                                     }
                                     ?>
-                                </select>
+                                </datalist>
+                                <script>
+                                    var values = [];
+                                    $('#clubFavoris option').each(function () {
+                                        values.push($(this).name());
+                                    });
+                                </script>
                             </div>
                             <div class="col-md-12">
                                 <div class="scrollingdiv">
@@ -106,11 +118,11 @@
     }
     ?>
 </body>
-        <script>
+<script>
 
-            var input = document.querySelector('#avatar');
-            var preview = document.querySelector('#preview');
-            input.addEventListener('change', updateImageDisplay);
+    var input = document.querySelector('#avatar');
+    var preview = document.querySelector('#preview');
+    input.addEventListener('change', updateImageDisplay);
 
-        </script>
+</script>
 </html>

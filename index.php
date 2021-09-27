@@ -2,7 +2,7 @@
     <head>
         <title>Accueil</title>
         <?php
-        include_once "includeAll.php";
+        include_once "php/includeAll.php";
         ?>
     </head>
     <body>
