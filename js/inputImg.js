@@ -14,21 +14,23 @@ function updateImageDisplay() {
             if (validFileType(theFile)) {
                 var image = document.createElement('img');
                 image.src = window.URL.createObjectURL(theFile);
-
+                para.textContent = 'Votre avatar';
+                
+                preview.appendChild(para);
                 preview.appendChild(image);
             } else {
                 para.textContent = 'Nom du fichier : ' + theFile.name + ' : Type de fichier non valide';
-                listItem.appendChild(para);
+                preview.appendChild(para);
             }
         }
     }
 }
-function validFileType(file) {    
-var fileTypes = [
-    'image/jpeg',
-    'image/png',
-    'image/jpg'
-];
+function validFileType(file) {
+    var fileTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/jpg'
+    ];
     for (var i = 0; i < fileTypes.length; i++) {
         if (file.type === fileTypes[i]) {
             return true;

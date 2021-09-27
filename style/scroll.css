@@ -7,9 +7,9 @@
     vertical-align: middle;
     overflow: hidden;
     max-width: 535px; /*set table width here if using fixed value*/
-    /*min-width: 100%;*/ /*set table width here if using %*/
+    min-width: 100%; /*set table width here if using %*/
     height: 150px; /*set table height here; can be fixed value or %*/
-    /*min-height: 104px;*/ /*if using % height, make this at least large enough to fit scrollbar arrows + captions + thead*/
+    /*min-height: /*104px; if using % height, make this at least large enough to fit scrollbar arrows + captions + thead*/
     line-height: 20px;
     padding-top: 20px; /*this determines top caption height*/
     padding-bottom: 20px; /*this determines bottom caption height*/
@@ -23,14 +23,11 @@
     position: relative;
     /*border-top: 1px solid #fff; /*top table border*/
     height: 100%;
-    padding-top: 20px; /*this determines column header height*/
+    padding-top: 5px; /*this determines column header height*/
 
     /*min-height: 43px;*/ /*if using % height, make this at least large enough to fit scrollbar arrows*/
     max-height: 100%;
-    overflow: scroll #fff; /*set to auto if using fixed or % width; else scroll*/
+    overflow: scroll; /*set to auto if using fixed or % width; else scroll*/
     overflow-x: hidden;
     border: 2px solid #fff; /*border around table body*/
-}
-
-.scrollingdiv scrollable-element {
 }

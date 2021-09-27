@@ -8,23 +8,18 @@
         ?>
         <link href="<?= INCLUDE_DIR ?>/style/formulaire.css" rel="stylesheet" type="text/css"/>
         <style>
-            #clubFavoris{
-                display: none;
-            }
         </style>
     </head>
 
     <div class="form-body">
         <div class="row">
-            <div id="preview" style="width: 25%; position: absolute; margin: 100px; box-sizing: border-box;">
-
-            </div>
             <div class="form-holder">
-
                 <div class="form-content">
-                    <div class="form-items">
+                    <div class="form-items">                        
+                        <div id="preview"></div>
                         <h3>S'inscrire maintenant</h3>
                         <p>Saisissez le formulaire</p>
+
                         <form name="formulaire" action="" method="post" autocomplete="off">
 
                             <div class="col-md-12">
@@ -68,12 +63,6 @@
                                     }
                                     ?>
                                 </datalist>
-                                <script>
-                                    var values = [];
-                                    $('#clubFavoris option').each(function () {
-                                        values.push($(this).name());
-                                    });
-                                </script>
                             </div>
                             <div class="col-md-12">
                                 <div class="scrollingdiv">
@@ -93,11 +82,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <script>
-                                $("#clubNews").imagepicker()
-                            </script>
                             <div>
-                                <label for="avatar">Choisir une photo de profile :</label>
+                                <label for="avatar">Choisir une photo de profil :</label>
                                 <input id="avatar" class="form-control" type="file"  name="avatar" accept="image/png, image/jpg, image/jpeg">
                             </div>
 
@@ -119,7 +105,7 @@
     ?>
 </body>
 <script>
-
+    $("#clubNews").imagepicker();
     var input = document.querySelector('#avatar');
     var preview = document.querySelector('#preview');
     input.addEventListener('change', updateImageDisplay);

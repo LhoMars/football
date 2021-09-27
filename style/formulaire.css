@@ -1,7 +1,21 @@
+/**
+    Author : Marcel Lhote
+*/
 
+#preview{
+    padding: 5px;
+    float: right;
+}
 #preview img{
-    max-width: 100%;
-    max-height: 100%;
+    /*    max-width: 100%;
+        max-height: 100%;*/
+    width:120px;
+    height:120px;
+    object-fit: cover;
+}
+
+#clubFavoris{
+    display: none;
 }
 
 .form-holder {
@@ -25,7 +39,7 @@
     justify-content: center;
     -webkit-align-items: center;
     align-items: center;
-    padding: 60px;
+    padding: 25px;
 }
 
 .form-content .form-items {
@@ -60,7 +74,7 @@
     font-size: 17px;
     font-weight: 300;
     line-height: 20px;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
 }
 
 
