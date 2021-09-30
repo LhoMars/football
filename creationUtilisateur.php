@@ -7,27 +7,7 @@
         $clubs = getDataFromDataBase("club");
         ?>
         <link href="<?= INCLUDE_DIR ?>style/formulaire.css" rel="stylesheet" type="text/css"/>
-        <style>
-        </style>
     </head>
-    <script type="text/javascript">
-        function setId(Id_club)
-        {
-            jQuery.ajax({
-                url: './ajax/ajax.php?action=id_club_favori',
-                type: 'POST',
-                data: {aid: Id_club},
-                success: function (data) {
-                    successmessage = 'Data was succesfully captured';
-                    alert(successmessage);
-                },
-                error: function (data) {
-                    successmessage = 'Error';
-                    alert(successmessage);
-                },
-            });
-        }
-    </script>
     <div class="form-body">
         <div class="row">
             <div class="form-holder">
@@ -37,14 +17,14 @@
                         <h3>S'inscrire maintenant</h3>
                         <p>Saisissez le formulaire</p>
 
-                        <form name="formulaire" enctype="multipart/form-data" action="" method="post" autocomplete="off">
+                        <form id="formulaire" name="formulaire" enctype="multipart/form-data" action="" method="post" autocomplete="off">
 
                             <div class="col-md-12">
                                 <input id="nom" class="form-control" name="nom" type="text" placeholder="Nom">
                             </div>
 
                             <div class="col-md-12">
-                                <input id="prenom" class="form-control" name="Prenom" type="text" placeholder="Prenom">
+                                <input id="prenom" class="form-control" name="prenom" type="text" placeholder="prenom">
                             </div>
 
                             <div class="col-md-12">
@@ -67,16 +47,15 @@
 
                             <div class="col-md-12">
                                 <label for="clubFavori"> Choissisez une équipe favorite :</label>
-                                <input id="clubFavori" list="clubFavoris" name="clubFavori">
-                                <datalist  id="clubFavoris" class="custom-select form-select mt-3"  name="clubFavoris">
+                                <select id="clubFavori" list="clubFavoris" name="clubFavori">
                                     <?php
                                     foreach ($clubs as $club) {
                                         ?>
-                                        <option id="<?= $club['id_club'] ?>" value="<?= $club['nom_club'] ?>"></option>
+                                        <option value="<?= $club['id_club'] ?>"><?= $club['nom_club'] ?></option>
                                         <?php
                                     }
                                     ?>
-                                </datalist>
+                                </select>
                             </div>
                             <div class="col-md-12">
                                 <div class="scrollingdiv">
@@ -86,7 +65,7 @@
                                             <?php
                                             foreach ($clubs as $club) {
                                                 ?>
-                                                <option style="background-color:#152733"data-img-src="asset/club/<?= $club['icon_club'] ?>.png" value="<?= $club['id_club'] ?>"><?= $club['nom_club'] ?></option>
+                                                <option style="background-color:#152733"data-img-src="<?= INCLUDE_DIR ?>asset/club/<?= $club['icon_club'] ?>.png" value="<?= $club['id_club'] ?>"><?= $club['nom_club'] ?></option>
                                                 <?php
                                             }
                                             ?>
@@ -115,24 +94,14 @@
             </div>
         </div>
     </div>
-
-    <script>
-        $(function () {
-            $('#submit').click(function () {
-                var a = $("#clubFavoris option[value='" + $('#clubFavori').val() + "']").attr('id');
-//                setId(a);
-            });
-        });
-    </script>
     <div style="color:#fff;">
         <?php
 //        // Vérifie que le boutton à été cliquer
-//        if (isset($_POST['submit'])) {
-//
+        if (isset($_POST['submit'])) {
 //            // Affichade de variable
-////            dump($_POST);
-////            
-//            // enregistre l'utilisateur
+            dump($_POST);
+            updateUtilisateur('1', $_POST);
+            // enregistre l'utilisateur
 //            $id = signUser($_POST);
 //
 //            // Vérifie si l'utilisateur à mis un avatar
@@ -157,11 +126,11 @@
 //            // Vérifie si l'utilisateur à choisi des abbonement au club
 //            if (isset($_POST['clubNews'])) {
 //                subscribeClub($id, $_POST['clubNews']);
-//            }
+//        }
         ?>
     </div>
     <?php
-//        }
+        }
     ?>
 </body>
 </html>

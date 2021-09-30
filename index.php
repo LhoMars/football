@@ -6,7 +6,9 @@
         ?>
     </head>
     <body>
-            <?php dump($_SERVER);?>
+        <div style="color:#fff">
+            <?php dump($_SERVER); ?>
+        </div>
     </body>
 </html>
 

@@ -24,6 +24,7 @@
     /*border-top: 1px solid #fff; /*top table border*/
     height: 100%;
     padding-top: 5px; /*this determines column header height*/
+    padding-left:2%;
 
     /*min-height: 43px;*/ /*if using % height, make this at least large enough to fit scrollbar arrows*/
     max-height: 100%;

@@ -15,10 +15,6 @@
     border-radius:100%;
 }
 
-#clubFavoris{
-    display: none;
-}
-
 .form-holder {
     display: flex;
     flex-direction: column;

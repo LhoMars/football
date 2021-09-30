@@ -66,7 +66,7 @@ function signUser($info) {
     $statement->execute(array(
         'id_club' => trim($info['clubFavori']),
         'nom_uti' => trim($info['nom']),
-        'prenom_uti' => trim($info['Prenom']),
+        'prenom_uti' => trim($info['prenom']),
         'sexe_uti' => trim($info['sexe']),
         'email_uti' => trim($info['email']),
         'password_uti' => trim($info['password'])
@@ -106,7 +106,7 @@ function subscribeClub($id_uti, $clubs) {
 
 function updateAvatar($id_uti, $infoFile) {
     $databaseConnection = getDatabaseConnection();
-    
+
     $ext = pathinfo($infoFile['name'], PATHINFO_EXTENSION);
 //    dump($ext);
 
@@ -118,13 +118,78 @@ function updateAvatar($id_uti, $infoFile) {
                         set image_uti = :nomFile
                         where id_uti = :id_uti;
 		');
-    
+
     $statement->execute(array(
         'id_uti' => $id_uti,
         'nomFile' => $nomFichier
     ));
-    
+
     return $nomFichier;
+}
+
+// Met à jour les information d'un utilisateur 
+function updateUtilisateur($id_uti, $tab) {
+
+    $databaseConnection = getDatabaseConnection();
+
+    $query = ' UPDATE
+                    utilisateur
+		SET 
+                ';
+    $params = array();
+    foreach ($tab as $key => $value) {
+        if ($value != '') {
+            $colum = '';
+
+            switch ($key) {
+                case 'nom':
+                    $colum = 'nom_uti';
+                    break;
+
+                case 'prenom':
+                    $colum = 'prenom_uti';
+                    break;
+
+                case 'sexe':
+                    $colum = 'sexe_uti';
+                    break;
+
+                case 'email':
+                    $colum = 'email_uti';
+                    break;
+
+                case 'password':
+                    $colum = 'password_uti';
+                    break;
+
+                case 'clubFavori':
+                    $colum = 'id_club';
+                    break;
+
+                default:
+                    $colum = '';
+                    break;
+            }
+
+            if ($colum !== "") {
+                $query .= ' ' . $colum . ' = :' . $colum . ',';
+                $params += [$colum => $value];
+            }
+        }
+    }
+
+    $query = rtrim($query, ',');
+    $query .= ' WHERE
+		id_uti = :id_uti';
+
+    $params += ['id_uti' => trim($id_uti)];
+    $statement = $databaseConnection->prepare($query);
+
+//    dump($query);
+//    dump($params);
+//    die;
+
+    $statement->execute($params);
 }
 
 ?>
