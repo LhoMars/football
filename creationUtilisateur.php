@@ -6,11 +6,28 @@
         getDatabaseConnection();
         $clubs = getDataFromDataBase("club");
         ?>
-        <link href="<?= INCLUDE_DIR ?>/style/formulaire.css" rel="stylesheet" type="text/css"/>
+        <link href="<?= INCLUDE_DIR ?>style/formulaire.css" rel="stylesheet" type="text/css"/>
         <style>
         </style>
     </head>
-
+    <script type="text/javascript">
+        function setId(Id_club)
+        {
+            jQuery.ajax({
+                url: './ajax/ajax.php?action=id_club_favori',
+                type: 'POST',
+                data: {aid: Id_club},
+                success: function (data) {
+                    successmessage = 'Data was succesfully captured';
+                    alert(successmessage);
+                },
+                error: function (data) {
+                    successmessage = 'Error';
+                    alert(successmessage);
+                },
+            });
+        }
+    </script>
     <div class="form-body">
         <div class="row">
             <div class="form-holder">
@@ -20,7 +37,7 @@
                         <h3>S'inscrire maintenant</h3>
                         <p>Saisissez le formulaire</p>
 
-                        <form name="formulaire" action="" method="post" autocomplete="off">
+                        <form name="formulaire" enctype="multipart/form-data" action="" method="post" autocomplete="off">
 
                             <div class="col-md-12">
                                 <input id="nom" class="form-control" name="nom" type="text" placeholder="Nom">
@@ -52,14 +69,11 @@
                                 <label for="clubFavori"> Choissisez une équipe favorite :</label>
                                 <input id="clubFavori" list="clubFavoris" name="clubFavori">
                                 <datalist  id="clubFavoris" class="custom-select form-select mt-3"  name="clubFavoris">
-                                    <option selected disabled value="">Selectionner</option>
                                     <?php
-                                    $i = 1;
                                     foreach ($clubs as $club) {
                                         ?>
-                                        <option value="<?= $i ?>" name="<?= $club['nom_club'] ?>"><?= $club['nom_club'] ?></option>
+                                        <option id="<?= $club['id_club'] ?>" value="<?= $club['nom_club'] ?>"></option>
                                         <?php
-                                        $i++;
                                     }
                                     ?>
                                 </datalist>
@@ -70,15 +84,16 @@
                                     <div>
                                         <select id="clubNews" class="image-picker" multiple name="clubNews[]">
                                             <?php
-                                            $i = 1;
                                             foreach ($clubs as $club) {
                                                 ?>
-                                                <option style="background-color:#152733"data-img-src="asset/club/<?= $club['nom_club'] ?>2.png" value="<?= $i ?>"><?= $club['nom_club'] ?></option>
+                                                <option style="background-color:#152733"data-img-src="asset/club/<?= $club['icon_club'] ?>.png" value="<?= $club['id_club'] ?>"><?= $club['nom_club'] ?></option>
                                                 <?php
-                                                $i++;
                                             }
                                             ?>
                                         </select>
+                                        <script>
+                                            $("#clubNews").imagepicker();
+                                        </script>
                                     </div>
                                 </div>
                             </div>
@@ -86,9 +101,13 @@
                                 <label for="avatar">Choisir une photo de profil :</label>
                                 <input id="avatar" class="form-control" type="file"  name="avatar" accept="image/png, image/jpg, image/jpeg">
                             </div>
-
+                            <script>
+                                var input = document.querySelector('#avatar');
+                                var preview = document.querySelector('#preview');
+                                input.addEventListener('change', updateImageDisplay);
+                            </script>
                             <div class="form-button mt-3">
-                                <button id="submit" type="submit" class="btn btn-primary">S'inscrire</button>
+                                <button id="submit" type="submit" name="submit" class="btn btn-primary">S'inscrire</button>
                             </div>
                         </form>
                     </div>
@@ -96,19 +115,53 @@
             </div>
         </div>
     </div>
-    <?php
-    if (isset($_POST)) {
-        ?>
-        <div style="background-color: #fff"><?php dump($_POST); ?></div>
+
+    <script>
+        $(function () {
+            $('#submit').click(function () {
+                var a = $("#clubFavoris option[value='" + $('#clubFavori').val() + "']").attr('id');
+//                setId(a);
+            });
+        });
+    </script>
+    <div style="color:#fff;">
         <?php
-    }
+//        // Vérifie que le boutton à été cliquer
+//        if (isset($_POST['submit'])) {
+//
+//            // Affichade de variable
+////            dump($_POST);
+////            
+//            // enregistre l'utilisateur
+//            $id = signUser($_POST);
+//
+//            // Vérifie si l'utilisateur à mis un avatar
+//            if (isset($_FILES['avatar'])) {
+//                $filename = updateAvatar($id, $_FILES['avatar']);
+//
+//                $uploaddir = './asset/avatarUtilisateur/';
+//                $uploadfile = $uploaddir . basename($filename);
+////                dump($uploadfile);die;
+//                // Déplace le fichier de xamp/temp à l'endroit choisi
+//                if (move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadfile)) {
+////                    echo "Le fichier est valide, et a été téléchargé
+////                    avec succès. Voici plus d'informations :\n";
+////                } else {
+////                    echo "Attaque potentielle par téléchargement de fichiers.
+////                    Voici plus d'informations :\n";
+//                }
+////                echo 'Voici quelques informations de débogage :';
+//                dump($_FILES);
+//            }
+//
+//            // Vérifie si l'utilisateur à choisi des abbonement au club
+//            if (isset($_POST['clubNews'])) {
+//                subscribeClub($id, $_POST['clubNews']);
+//            }
+        ?>
+    </div>
+    <?php
+//        }
     ?>
 </body>
-<script>
-    $("#clubNews").imagepicker();
-    var input = document.querySelector('#avatar');
-    var preview = document.querySelector('#preview');
-    input.addEventListener('change', updateImageDisplay);
-
-</script>
 </html>

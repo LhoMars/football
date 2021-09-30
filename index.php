@@ -6,8 +6,7 @@
         ?>
     </head>
     <body>
-        <p>
             <?php dump($_SERVER);?>
-		</p>
     </body>
 </html>
+
