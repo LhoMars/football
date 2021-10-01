@@ -172,7 +172,7 @@ function updateUtilisateur($id_uti, $tab) {
             }
 
             if ($colum !== "") {
-                $query .= ' ' . $colum . ' = :' . $colum . ',';
+                $query .= " {$colum} = :{$colum},";
                 $params += [$colum => $value];
             }
         }
@@ -185,9 +185,9 @@ function updateUtilisateur($id_uti, $tab) {
     $params += ['id_uti' => trim($id_uti)];
     $statement = $databaseConnection->prepare($query);
 
-//    dump($query);
-//    dump($params);
-//    die;
+    dump($query);
+    dump($params);
+    die;
 
     $statement->execute($params);
 }
