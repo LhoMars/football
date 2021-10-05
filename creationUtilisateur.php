@@ -100,7 +100,7 @@
         if (isset($_POST['submit'])) {
 //            // Affichade de variable
             dump($_POST);
-            updateUtilisateur('1', $_POST);
+//            updateUtilisateur('1', $_POST);
             // enregistre l'utilisateur
 //            $id = signUser($_POST);
 //
