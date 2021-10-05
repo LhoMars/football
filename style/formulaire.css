@@ -83,8 +83,8 @@
     width: 100%;
     padding: 9px 20px;
     text-align: left;
-    border: 0;
     outline: 0;
+    border-width: 4px;
     border-radius: 6px;
     background-color: #fff;
     font-size: 15px;
@@ -139,10 +139,10 @@
     margin-bottom: 8px !important;
 }
 
-.invalid-feedback{
-    color: #ff606e;
+input:invalid:required{
+    border-color: crimson;
 }
 
-.valid-feedback{
-    color: #2acc80;
+input:valid:required{
+    border-color: chartreuse;
 }
