@@ -11,6 +11,42 @@
     </head>
     <body>
         <?php
+        if (isset($_POST['validSubmit'])) {
+
+            // Vérifie que le boutton à été cliquer
+            // Affichade de variable
+
+            if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/', $_POST['email']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['nom']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['prenom']) && preg_match("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/", $_POST['password']) && $_POST['clubFavori'] != 0 && preg_match("#homme|femme#", $_POST['sexe'])) {
+
+                dump($_POST);
+                // enregistre l'utilisateur
+                $id = signUser($_POST);
+
+                // Vérifie si l'utilisateur à mis un avatar
+                if (strcmp($_FILES['avatar']['name'], '')) {
+                    $filename = updateAvatar($id, $_FILES['avatar']);
+
+                    $uploaddir = './asset/avatarUtilisateur/';
+                    $uploadfile = $uploaddir . basename($filename);
+//                dump($uploadfile);die;
+                    // Déplace le fichier de xamp/temp à l'endroit choisi
+                    if (move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadfile)) {
+//                    echo "Le fichier est valide, et a été téléchargé
+//                    avec succès. Voici plus d'informations :\n";
+//                } else {
+//                    echo "Attaque potentielle par téléchargement de fichiers.
+//                    Voici plus d'informations :\n";
+                    }
+//                echo 'Voici quelques informations de débogage :';
+                    dump($_FILES);
+                }
+                // Vérifie si l'utilisateur à choisi des abbonement au club
+                if (isset($_POST['clubNews'])) {
+                    subscribeClub($id, $_POST['clubNews']);
+                }
+                header('location:index.php');
+            }
+        }
         if ($_POST) {
             $nom = $_POST['nom'];
             $prenom = $_POST['prenom'];
@@ -60,7 +96,7 @@
 
                                 <div class="col-md-12">
                                     <label for="clubFavori"> Choissisez une équipe favorite :</label>
-                                    <select id="clubFavori" list="clubFavoris" name="clubFavori">
+                                    <select id="clubFavori" list="clubFavoris" name="clubFavori" required="">
                                         <option value="0">Selection</option>
                                         <?php
                                         foreach ($clubs as $club) {
@@ -106,17 +142,12 @@
                                     </span>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <script>
-//                var boutonSubmit = document.getElementById("submit");
-//
-//                boutonSubmit.onsubmit( function (event){
-
             var divErrorMessage = document.getElementById("errorMesage");
             divErrorMessage.style.display = "none";
 
@@ -124,71 +155,22 @@
                 var monForm = document.getElementById("formulaire");
                 var divErrorMessage = document.getElementById("errorMesage");
 
-//            var nom = monForm["nom"];
-//            var prenom = monForm["prenom"];
-//            var email = monForm["email"];
-////            var sexe = monForm["sexe"];
-//            var mdp = monForm["password"];
-
                 var nom = (monForm["nom"]) ? monForm["nom"] : "";
                 var prenom = (monForm["prenom"]) ? monForm["prenom"] : "";
                 var email = (monForm["email"]) ? monForm["email"] : "";
                 var mdp = (monForm["mdp"]) ? monForm["mdp"] : "";
 
                 var emailPregMatch = /^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/.test(email.value);
-                var nomPregMatch = /[a-zA-Z]{3,}/.test(nom.value);
-                var prenomPregMatch = /[a-zA-Z]{3,}/.test(prenom.value);
+                var nomPregMatch = /[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/.test(nom.value);
+                var prenomPregMatch = /[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/.test(prenom.value);
 
                 if (emailPregMatch && nomPregMatch && prenomPregMatch) {
-//                    alert("ok");
                     divErrorMessage.style.display = "none";
                 } else {
                     event.preventDefault();
                     divErrorMessage.style.display = "contents";
-
                 }
             });
         </script>
-        <div style="color:#fff;">
-            <?php
-//        // Vérifie que le boutton à été cliquer
-            if (isset($_POST['validSubmit'])) {
-//            // Affichade de variable
-
-                if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/', $_POST['email']) && preg_match('/[a-zA-Z]{3,}/', $_POST['nom']) && preg_match('/[a-zA-Z]{3,}/', $_POST['prenom']) && preg_match("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/", $_POST['password']) && $_POST['clubFavori'] != 0) {
-
-                    dump($_POST);
-                    // enregistre l'utilisateur
-                    $id = signUser($_POST);
-
-                    // Vérifie si l'utilisateur à mis un avatar
-                    if (strcmp($_FILES['avatar']['name'], '')) {
-                        $filename = updateAvatar($id, $_FILES['avatar']);
-
-                        $uploaddir = './asset/avatarUtilisateur/';
-                        $uploadfile = $uploaddir . basename($filename);
-//                dump($uploadfile);die;
-                        // Déplace le fichier de xamp/temp à l'endroit choisi
-                        if (move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadfile)) {
-//                    echo "Le fichier est valide, et a été téléchargé
-//                    avec succès. Voici plus d'informations :\n";
-//                } else {
-//                    echo "Attaque potentielle par téléchargement de fichiers.
-//                    Voici plus d'informations :\n";
-                        }
-//                echo 'Voici quelques informations de débogage :';
-                        dump($_FILES);
-                    }
-
-                    // Vérifie si l'utilisateur à choisi des abbonement au club
-                    if (isset($_POST['clubNews'])) {
-                        subscribeClub($id, $_POST['clubNews']);
-                    }
-                }
-//            } else {
-////                dump('ERREUR');
-            }
-            ?>
-        </div>
     </body>
 </html>

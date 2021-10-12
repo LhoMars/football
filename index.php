@@ -7,6 +7,7 @@
     </head>
     <body>
         <div style="color:#fff">
+            <a href="creationUtilisateur.php">create User</a>
             <?php dump($_SERVER); ?>
         </div>
     </body>
