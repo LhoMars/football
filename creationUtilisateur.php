@@ -44,6 +44,7 @@
                 if (isset($_POST['clubNews'])) {
                     subscribeClub($id, $_POST['clubNews']);
                 }
+                login($id, $_POST);
                 header('location:index.php');
             }
         }

@@ -1,14 +1,16 @@
 <?php
 
-require_once'variable.php';
+require_once 'variable.php';
 
-function dump($t) {
+function dump($t)
+{
     print_r('<pre>');
     var_dump($t);
     print_r('</pre>');
 }
 
-function getDatabaseConnection() {
+function getDatabaseConnection()
+{
     try { // connect to database and return connections
         $conn = new PDO('pgsql:host=localhost;dbname=footBall;password=admin;user=adminFoot;port=5432');
         return $conn;
@@ -18,7 +20,8 @@ function getDatabaseConnection() {
     }
 }
 
-function getDataFromDataBase($tableName) {
+function getDataFromDataBase($tableName)
+{
     // get database connection
     $databaseConnection = getDatabaseConnection();
     // create our sql statment
@@ -33,7 +36,8 @@ function getDataFromDataBase($tableName) {
     return $data;
 }
 
-function signUser($info) {
+function signUser($info)
+{
     // get database connection
     $databaseConnection = getDatabaseConnection();
 
@@ -76,7 +80,8 @@ function signUser($info) {
     return $databaseConnection->lastInsertId();
 }
 
-function subscribeClub($id_uti, $clubs) {
+function subscribeClub($id_uti, $clubs)
+{
     $databaseConnection = getDatabaseConnection();
     foreach ($clubs as $club) {
 
@@ -104,7 +109,8 @@ function subscribeClub($id_uti, $clubs) {
     }
 }
 
-function updateAvatar($id_uti, $infoFile) {
+function updateAvatar($id_uti, $infoFile)
+{
     $databaseConnection = getDatabaseConnection();
 
     $ext = pathinfo($infoFile['name'], PATHINFO_EXTENSION);
@@ -128,7 +134,8 @@ function updateAvatar($id_uti, $infoFile) {
 }
 
 // Met à jour les information d'un utilisateur 
-function updateUtilisateur($id_uti, $tab) {
+function updateUtilisateur($id_uti, $tab)
+{
 
     $databaseConnection = getDatabaseConnection();
 
@@ -190,6 +197,14 @@ function updateUtilisateur($id_uti, $tab) {
     die;
 
     $statement->execute($params);
+}
+
+function login($user_id, $info)
+{
+    $_SESSION['user_id'] = $user_id;
+    $_SESSION['user_info'] = $info;
+    $_SESSION['is_logged_in'] = true;
+
 }
 
 ?>
