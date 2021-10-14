@@ -204,7 +204,5 @@ function login($user_id, $info)
     $_SESSION['user_id'] = $user_id;
     $_SESSION['user_info'] = $info;
     $_SESSION['is_logged_in'] = true;
-
 }
-
 ?>
