@@ -3,11 +3,11 @@
     <head>
         <title>Inscription</title>
         <?php
-        include_once 'php/includeAll.php';
+        include_once "../php/includeAll.php";
+        loggedInRedirect();
         getDatabaseConnection();
         $clubs = getDataFromDataBase("club");
         ?>
-        <link href="<?= INCLUDE_DIR ?>style/formulaire.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
         <?php
@@ -18,7 +18,9 @@
 
             if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/', $_POST['email']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['nom']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['prenom']) && preg_match("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/", $_POST['password']) && $_POST['clubFavori'] != 0 && preg_match("#homme|femme#", $_POST['sexe'])) {
 
-                dump($_POST);
+                $_POST['password'] = password_hash($_POST['password'],PASSWORD_DEFAULT);
+                //dump($_POST);
+
                 // enregistre l'utilisateur
                 $id = signUser($_POST);
 
@@ -44,8 +46,11 @@
                 if (isset($_POST['clubNews'])) {
                     subscribeClub($id, $_POST['clubNews']);
                 }
-                login($id, $_POST);
+                $userInfo = getUserWithEmailAddress( trim( $_POST['email'] ) );
+                createSession($userInfo);
                 header('location:index.php');
+            }else{
+                header("Location:creationUtilisateur?connect=false");
             }
         }
         if ($_POST) {
@@ -173,5 +178,12 @@
                 }
             });
         </script>
+        </script>
+        <?php
+        if(isset($_GET['connect'])){?>
+            <script>divErrorMessage.style.display = "contents";</script>
+            <?php
+        }
+        ?>
     </body>
 </html>

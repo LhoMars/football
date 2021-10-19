@@ -134,9 +134,8 @@ function updateAvatar($id_uti, $infoFile)
 }
 
 // Met à jour les information d'un utilisateur 
-function updateUtilisateur($id_uti, $tab)
+function updateUser($id_uti, $tab)
 {
-
     $databaseConnection = getDatabaseConnection();
 
     $query = ' UPDATE
@@ -199,10 +198,175 @@ function updateUtilisateur($id_uti, $tab)
     $statement->execute($params);
 }
 
-function login($user_id, $info)
+function loginUser($email, $password) : bool
 {
-    $_SESSION['user_id'] = $user_id;
+    $res =false;
+    // Connection data
+    $databaseConnection = getDatabaseConnection();
+
+    // Création statement
+    $statement = $databaseConnection->prepare( '
+			SELECT
+				password_uti
+			FROM
+				utilisateur
+			WHERE
+				email_uti = :email
+		' );
+
+    // execute sql with actual values
+    $statement->execute( array(
+        'email' => trim( $email )
+    ) );
+
+    $passwordHash = $statement->fetch();
+
+    if($passwordHash)$res = password_verify($password, $passwordHash['password_uti']);
+
+    if($res)
+    {
+    $infoUser = getUserWithEmailAddress($email);
+    createSession($infoUser);
+
+    }
+
+    return $res;
+}
+
+function createSession($info)
+{
     $_SESSION['user_info'] = $info;
     $_SESSION['is_logged_in'] = true;
+}
+
+/**
+ * Récupère une ligne d'une table avec l'id
+ *
+ * @param string $tableName
+ * @param string $column
+ * @param string $value
+ *
+ * @return array $info
+ */
+function getRowWithValue( $tableName, $column, $value ) {
+    // get database connection
+    $databaseConnection = getDatabaseConnection();
+
+    // create our sql statment
+    $statement = $databaseConnection->prepare( '
+			SELECT
+				*
+			FROM
+				' . $tableName . '
+			WHERE
+				' . $column . ' = :' . $column
+    );
+
+    // execute sql with actual values
+    $statement->setFetchMode( PDO::FETCH_ASSOC );
+    $statement->execute( array(
+        $column => trim( $value )
+    ) );
+
+    // get and return user
+    $user = $statement->fetch();
+    return $user;
+}
+
+/**
+ * Récupère l'utilisateur avec son email
+ *
+ * @param array $email
+ *
+ * @return array $userInfo
+ */
+function getUserWithEmailAddress( $email ) {
+    // get database connection
+    $databaseConnection = getDatabaseConnection();
+
+    // create our sql statment
+    $statement = $databaseConnection->prepare( '
+			SELECT
+				*
+			FROM
+				utilisateur
+			WHERE
+				email_uti = :email
+		' );
+
+    // execute sql with actual values
+    $statement->setFetchMode( PDO::FETCH_ASSOC );
+    $statement->execute( array(
+        'email' => trim( $email )
+    ) );
+
+    // get and return user
+    $user = $statement->fetch();
+    return $user;
+}
+
+/**
+ * Met à jour une colone d'une table avec son id
+ *
+ * @param string $tableName
+ * @param string $column
+ * @param string $value
+ * @param string $id
+ *
+ * @return void
+ */
+function updateRow( $tableName, $column, $value, $id ) {
+    // get database connection
+    $databaseConnection = getDatabaseConnection();
+
+    // create our sql statment
+    $statement = $databaseConnection->prepare( '
+			UPDATE
+				' . $tableName . '
+			SET
+				' . $column . ' = :value
+			WHERE
+				id = :id
+		' );
+
+    // set our parameters to use with the statment
+    $params = array(
+        'value' => trim( $value ),
+        'id' => trim( $id )
+    );
+
+    // run the query
+    $statement->execute( $params );
+}
+
+
+
+/**
+ * Vérifie que l'utilisateur est connecté
+ *
+ * @param void
+ *
+ * @return boolean
+ */
+function isLoggedIn() {
+    if ( ( isset( $_SESSION['is_logged_in'] ) && $_SESSION['is_logged_in'] ) && ( isset( $_SESSION['user_info'] ) && $_SESSION['user_info'] ) ) { // check session variables, user is logged in
+        return true;
+    } else { // user is not logged in
+        return false;
+    }
+}
+
+/**
+ * Si l'utilisateur est connecter on le redirige
+ *
+ * @param void
+ *
+ * @return boolean
+ */
+function loggedInRedirect() {
+    if ( isLoggedIn() ) { // user is logged in
+        // send them to the home page
+        header( 'location:'.INCLUDE_DIR.'index.php' );
+    }
 }
 ?>

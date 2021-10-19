@@ -22,3 +22,4 @@ require_once 'function.php';
 <link href="<?=INCLUDE_DIR?>style/scroll.css" rel="stylesheet" type="text/css"/>
 <link href="<?=INCLUDE_DIR?>style/general.css" rel="stylesheet" type="text/css"/>
 <link rel="icon" href="<?=INCLUDE_DIR?>asset/footIcon.png" type="image/ico">
+<link href="<?= INCLUDE_DIR ?>style/formulaire.css" rel="stylesheet" type="text/css"/>
