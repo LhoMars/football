@@ -306,42 +306,6 @@ function getUserWithEmailAddress( $email ) {
 }
 
 /**
- * Met à jour une colone d'une table avec son id
- *
- * @param string $tableName
- * @param string $column
- * @param string $value
- * @param string $id
- *
- * @return void
- */
-function updateRow( $tableName, $column, $value, $id ) {
-    // get database connection
-    $databaseConnection = getDatabaseConnection();
-
-    // create our sql statment
-    $statement = $databaseConnection->prepare( '
-			UPDATE
-				' . $tableName . '
-			SET
-				' . $column . ' = :value
-			WHERE
-				id = :id
-		' );
-
-    // set our parameters to use with the statment
-    $params = array(
-        'value' => trim( $value ),
-        'id' => trim( $id )
-    );
-
-    // run the query
-    $statement->execute( $params );
-}
-
-
-
-/**
  * Vérifie que l'utilisateur est connecté
  *
  * @param void
@@ -354,6 +318,10 @@ function isLoggedIn() {
     } else { // user is not logged in
         return false;
     }
+}
+
+function loGoout(){
+    session_destroy();
 }
 
 /**

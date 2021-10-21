@@ -1,14 +1,15 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Accueil</title>
         <?php
-        include_once "php/includeAll.php";
+        require_once "php/includeAll.php";
         ?>
     </head>
     <body>
+    <?php
+     include_once(ROOT_PATH.'pages/header.php');?>
         <div style="color:#fff">
-            <a href="<?=INCLUDE_DIR?>pages/creationUtilisateur.php">Inscription</a>
-            <a href="<?=INCLUDE_DIR?>pages/connexion.php">Connexion</a>
             <?php dump($_SESSION);
             dump($_SERVER); ?>
         </div>

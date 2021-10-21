@@ -3,7 +3,7 @@
     <head>
         <title>Inscription</title>
         <?php
-        include_once "../php/includeAll.php";
+        require_once "../php/includeAll.php";
         loggedInRedirect();
         getDatabaseConnection();
         $clubs = getDataFromDataBase("club");
@@ -16,8 +16,10 @@
             // Vérifie que le boutton à été cliquer
             // Affichade de variable
 
-            if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/', $_POST['email']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['nom']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['prenom']) && preg_match("/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/", $_POST['password']) && $_POST['clubFavori'] != 0 && preg_match("#homme|femme#", $_POST['sexe'])) {
+            if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/', $_POST['email']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['nom']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['prenom']) && $_POST['clubFavori'] != 0 && preg_match("#homme|femme#", $_POST['sexe'])) {
 
+                $a = password_verify($_POST['password'], password_hash($_POST['password']));
+                dump($a);
                 $_POST['password'] = password_hash($_POST['password'],PASSWORD_DEFAULT);
                 //dump($_POST);
 
@@ -62,7 +64,7 @@
             $prenom = '';
             $email = '';
         }
-        ?>
+        include_once(ROOT_PATH.'pages/header.php');?>
         <div class="form-body">
             <div class="row">
                 <div class="form-holder">
@@ -88,6 +90,10 @@
 
                                 <div class="col-md-12">
                                     <input id="password" class="form-control" name="password" type="password"  placeholder="Saisir votre mot de passe" required="">
+                                </div>
+
+                                <div class="col-md-12">
+                                    <input id="password2" class="form-control" name="password2" type="password"  placeholder="Saisir votre mot de passe une deuxième fois" required="">
                                 </div>
 
                                 <div class="col-md-12 mt-3">
