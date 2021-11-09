@@ -10,8 +10,10 @@
     <?php
      include_once(ROOT_PATH.'pages/header.php');?>
         <div style="color:#fff">
-            <?php dump($_SESSION);
-            dump($_SERVER); ?>
+            <h3>session :</h3>
+            <?php dump($_SESSION);?>
+            <h3>serveur :</h3>
+            <?php dump($_SERVER); ?>
         </div>
     </body>
 </html>

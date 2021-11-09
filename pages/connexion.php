@@ -8,11 +8,10 @@
 
     if (isset($_POST['validSubmit']) && isset($_POST['email']) && isset($_POST['password'])) {
         $t = loginUser($_POST['email'], $_POST['password']);
+        $infoUser = getUserWithEmailAddress($_POST['email']);
+        if(isset($infoUser['id_uti'])) saveLog($infoUser['id_uti'],getIpClient(),isLoggedIn());
         if ($t) {
-            dump("ok");
             header("location:" . INCLUDE_DIR . "index.php");
-        } else {
-            header("Location:connexion.php?connect=false");
         }
     }
 

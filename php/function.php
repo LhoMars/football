@@ -20,7 +20,7 @@ function getDatabaseConnection()
     }
 }
 
-function getDataFromDataBase($tableName)
+function getDataFromDataBase($tableName): bool|array
 {
     // get database connection
     $databaseConnection = getDatabaseConnection();
@@ -36,7 +36,7 @@ function getDataFromDataBase($tableName)
     return $data;
 }
 
-function signUser($info)
+function signUser($info): int
 {
     // get database connection
     $databaseConnection = getDatabaseConnection();
@@ -109,7 +109,7 @@ function subscribeClub($id_uti, $clubs)
     }
 }
 
-function updateAvatar($id_uti, $infoFile)
+function updateAvatar($id_uti, $infoFile): string
 {
     $databaseConnection = getDatabaseConnection();
 
@@ -133,7 +133,11 @@ function updateAvatar($id_uti, $infoFile)
     return $nomFichier;
 }
 
-// Met à jour les information d'un utilisateur 
+/**
+ * Met à jour les information d'un utilisateur
+ * @param $id_uti
+ * @param $tab
+ */
 function updateUser($id_uti, $tab)
 {
     $databaseConnection = getDatabaseConnection();
@@ -227,7 +231,6 @@ function loginUser($email, $password) : bool
     {
     $infoUser = getUserWithEmailAddress($email);
     createSession($infoUser);
-
     }
 
     return $res;
@@ -248,7 +251,8 @@ function createSession($info)
  *
  * @return array $info
  */
-function getRowWithValue( $tableName, $column, $value ) {
+function getRowWithValue(string $tableName, string $column, string $value ): array
+{
     // get database connection
     $databaseConnection = getDatabaseConnection();
 
@@ -276,11 +280,11 @@ function getRowWithValue( $tableName, $column, $value ) {
 /**
  * Récupère l'utilisateur avec son email
  *
- * @param array $email
+ * @param string $email
  *
- * @return array $userInfo
+ * @return array|bool $userInfo
  */
-function getUserWithEmailAddress( $email ) {
+function getUserWithEmailAddress(string $email ): array|bool {
     // get database connection
     $databaseConnection = getDatabaseConnection();
 
@@ -312,7 +316,7 @@ function getUserWithEmailAddress( $email ) {
  *
  * @return boolean
  */
-function isLoggedIn() {
+function isLoggedIn(): bool {
     if ( ( isset( $_SESSION['is_logged_in'] ) && $_SESSION['is_logged_in'] ) && ( isset( $_SESSION['user_info'] ) && $_SESSION['user_info'] ) ) { // check session variables, user is logged in
         return true;
     } else { // user is not logged in
@@ -331,10 +335,108 @@ function loGoout(){
  *
  * @return boolean
  */
-function loggedInRedirect() {
+function loggedInRedirect()
+{
     if ( isLoggedIn() ) { // user is logged in
         // send them to the home page
         header( 'location:'.INCLUDE_DIR.'index.php' );
     }
 }
+
+/**
+ * @param int $id_uti : id de l'utilisateur
+ * @param string $ip : adresse ip utilisateur
+ * @param boolean $connValue : etat de la connection
+ */
+function saveLog(int $id_uti, string $ip, bool $connValue) {
+    $value = $connValue ? 'true' : 'false';
+
+    // get database connection
+    $databaseConnection = getDatabaseConnection();
+
+    // create our sql statment
+    $statement = $databaseConnection->prepare('
+			INSERT INTO
+				LOGS (
+				    id,
+                    id_uti,
+					date_log,
+					ip_log,
+					status
+				)
+			VALUES (
+                default,
+			    :id_uti,
+				now(),
+				:ip_log,
+				:status                                
+			)
+		');
+
+    // execute sql with actual values
+    $statement->execute(array(
+        'id_uti' => trim($id_uti),
+        'ip_log' => trim($ip),
+        'status' => trim($value)
+    ));
+
+}
+
+/**
+ * Function to get the client IP address
+ * @return array|false|string
+ */
+function getIpClient(): bool|array|string
+{
+    $ipaddress = '';
+    if (getenv('HTTP_CLIENT_IP'))
+        $ipaddress = getenv('HTTP_CLIENT_IP');
+    else if(getenv('HTTP_X_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+    else if(getenv('HTTP_X_FORWARDED'))
+        $ipaddress = getenv('HTTP_X_FORWARDED');
+    else if(getenv('HTTP_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_FORWARDED_FOR');
+    else if(getenv('HTTP_FORWARDED'))
+        $ipaddress = getenv('HTTP_FORWARDED');
+    else if(getenv('REMOTE_ADDR'))
+        $ipaddress = getenv('REMOTE_ADDR');
+    else
+        $ipaddress = 'UNKNOWN';
+    return $ipaddress;
+}
+
+function EnableConnectionUser($id_uti): bool {
+    $res = false;
+
+    // get database connection
+    $databaseConnection = getDatabaseConnection();
+
+    // create our sql statment
+    $statement = $databaseConnection->prepare("
+			SELECT liste.status,min(liste.date_log) as dmin, 
+			    max(liste.date_log) as dmax,
+                max(liste.date_log)-min(liste.date_log) as diff,
+                now()-min(liste.date_log) as plusAncien,
+                now()-max(liste.date_log) as plusRecent
+
+
+            FROM (
+                SELECT * from logs l
+                where l.id_uti = :id_uti
+                order by l.date_log desc
+                limit 10
+                ) as liste
+            group by liste.status
+            having now()-min(liste.date_log) < '00:20:00';
+		") ;
+
+    // execute sql with actual values
+    $statement->execute(array(
+        'id_uti' => trim($id_uti)
+    ));
+
+    return $res;
+}
+
 ?>

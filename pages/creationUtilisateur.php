@@ -16,11 +16,14 @@
             // Vérifie que le boutton à été cliquer
             // Affichade de variable
 
-            if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/', $_POST['email']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['nom']) && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['prenom']) && $_POST['clubFavori'] != 0 && preg_match("#homme|femme#", $_POST['sexe'])) {
+            if (preg_match('/^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$/', $_POST['email'])
+                && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['nom'])
+                && preg_match('/[a-zA-ZçéèêëíìîïôöÿæœÇÉÈÊËÎÏÔÖÛÜŸ]{3,}/', $_POST['prenom'])
+                && $_POST['clubFavori'] != 0
+                && preg_match("#homme|femme#", $_POST['sexe'])
+                && password_verify($_POST['password'], password_hash($_POST['password2'], PASSWORD_DEFAULT))) {
 
-                $a = password_verify($_POST['password'], password_hash($_POST['password']));
-                dump($a);
-                $_POST['password'] = password_hash($_POST['password'],PASSWORD_DEFAULT);
+                $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
                 //dump($_POST);
 
                 // enregistre l'utilisateur
@@ -48,11 +51,9 @@
                 if (isset($_POST['clubNews'])) {
                     subscribeClub($id, $_POST['clubNews']);
                 }
-                $userInfo = getUserWithEmailAddress( trim( $_POST['email'] ) );
+                $userInfo = getUserWithEmailAddress(trim($_POST['email']));
                 createSession($userInfo);
-                header('location:index.php');
-            }else{
-                header("Location:creationUtilisateur?connect=false");
+                header("location:" . INCLUDE_DIR . "index.php");
             }
         }
         if ($_POST) {
