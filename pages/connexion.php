@@ -9,7 +9,7 @@
     if (isset($_POST['validSubmit']) && isset($_POST['email']) && isset($_POST['password'])) {
         $t = loginUser($_POST['email'], $_POST['password']);
         $infoUser = getUserWithEmailAddress($_POST['email']);
-        if(isset($infoUser['id_uti'])) saveLog($infoUser['id_uti'],getIpClient(),isLoggedIn());
+        if (isset($infoUser['id_uti'])) saveLog($infoUser['id_uti'], getIpClient(), isLoggedIn());
         if ($t) {
             header("location:" . INCLUDE_DIR . "index.php");
         }
@@ -24,7 +24,7 @@
 </head>
 <body>
 <?php
-include_once(ROOT_PATH.'pages/header.php');
+include_once(ROOT_PATH . 'pages/header.php');
 ?>
 <div class="form-body">
     <div class="row">
@@ -48,8 +48,10 @@ include_once(ROOT_PATH.'pages/header.php');
                                    placeholder="Saisir votre mot de passe" required="">
                         </div>
                         <div class="form-button mt-3">
-                        <button id="validSubmit" type="submit" name="validSubmit" class="btn btn-primary">S'inscrire</button>
-                        <span id="errorMesage" style="color: red; text-align: center;">
+                            <button id="validSubmit" type="submit" name="validSubmit" class="btn btn-primary">
+                                S'inscrire
+                            </button>
+                            <span id="errorMesage" style="color: red; text-align: center;">
                                         Identifiant ou mot de passe inconnue
                                     </span>
                         </div>
@@ -64,9 +66,10 @@ include_once(ROOT_PATH.'pages/header.php');
     divErrorMessage.style.display = "none";
 </script>
 <?php
-if(isset($_GET['connect'])){?>
-<script>divErrorMessage.style.display = "contents";</script>
-<?php
+if (isset($_GET['connect'])) {
+    ?>
+    <script>divErrorMessage.style.display = "contents";</script>
+    <?php
 }
 ?>
 </body>

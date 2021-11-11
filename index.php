@@ -9,7 +9,7 @@
     <body>
     <?php
      include_once(ROOT_PATH.'pages/header.php');?>
-        <div style="color:#fff">
+        <div class="container" style="color:#fff">
             <h3>session :</h3>
             <?php dump($_SESSION);?>
             <h3>serveur :</h3>

@@ -2,24 +2,40 @@
 
 require_once 'variable.php';
 
-function dump($t)
+/**
+ * Affiche un text en format balise pre
+ *
+ * @param $t : le text à afficher
+ */
+function dump($t): void
 {
     print_r('<pre>');
     var_dump($t);
     print_r('</pre>');
 }
 
-function getDatabaseConnection()
+/**
+ * Récupère la connexion de la bdd
+ *
+ * @return PDO|null : objet PDO de bdd ou rien si la connexion à échoué
+ */
+function getDatabaseConnection(): PDO|null
 {
     try { // connect to database and return connections
-        $conn = new PDO('pgsql:host=localhost;dbname=footBall;password=admin;user=adminFoot;port=5432');
-        return $conn;
+        return new PDO('pgsql:host=localhost;dbname=footBall;password=admin;user=adminFoot;port=5432');
     } catch (PDOException $e) {
         print "Erreur connection ! : " . $e->getMessage() . "<br/>";
         die();
     }
 }
 
+/**
+ * Récupère les données d'une table
+ *
+ * @param $tableName : nom de la table
+ *
+ * @return bool|array : false si la table n'existe pas ou le tableau des données
+ */
 function getDataFromDataBase($tableName): bool|array
 {
     // get database connection
@@ -32,10 +48,16 @@ function getDataFromDataBase($tableName): bool|array
     $statement->execute();
 
     // get and return user
-    $data = $statement->fetchAll();
-    return $data;
+    return $statement->fetchAll();
 }
 
+/**
+ *  Enregistre un utilisateur en bdd
+ *
+ * @param $info : toute les information du formulaire d'enregistrement
+ *
+ * @return int : id utilisateur
+ */
 function signUser($info): int
 {
     // get database connection
@@ -80,7 +102,13 @@ function signUser($info): int
     return $databaseConnection->lastInsertId();
 }
 
-function subscribeClub($id_uti, $clubs)
+/**
+ *  Abonne un utilisateur à une liste de club
+ *
+ * @param $id_uti : id de l'utilsiateur
+ * @param $clubs : tableau de nom de club
+ */
+function subscribeClub($id_uti, $clubs): void
 {
     $databaseConnection = getDatabaseConnection();
     foreach ($clubs as $club) {
@@ -103,12 +131,20 @@ function subscribeClub($id_uti, $clubs)
 //        dump($id_uti);
 //        dump($club);die;
         $statement->execute(array(
-            'id_uti' => $id_uti,
-            'id_club' => $club
+            'id_uti' => trim($id_uti),
+            'id_club' => trim($club)
         ));
     }
 }
 
+/**
+ * Modifie l'avatar de l'utilisateur
+ *
+ * @param $id_uti : id de lutilisateur
+ * @param $infoFile : information du fichier avec $_FILES
+ *
+ * @return string : nom du fichier avec extension
+ */
 function updateAvatar($id_uti, $infoFile): string
 {
     $databaseConnection = getDatabaseConnection();
@@ -135,10 +171,11 @@ function updateAvatar($id_uti, $infoFile): string
 
 /**
  * Met à jour les information d'un utilisateur
- * @param $id_uti
- * @param $tab
+ *
+ * @param $id_uti : id de l'utilisateur
+ * @param $tab : toutes les valeurs à changer avec key->value
  */
-function updateUser($id_uti, $tab)
+function updateUser($id_uti, $tab): void
 {
     $databaseConnection = getDatabaseConnection();
 
@@ -202,41 +239,53 @@ function updateUser($id_uti, $tab)
     $statement->execute($params);
 }
 
-function loginUser($email, $password) : bool
+/**
+ * Connecte l'utilisateur
+ *
+ * @param $email : email de l'utilisateur
+ * @param $password : mdp de l'utilisateur
+ *
+ * @return bool : true si la connexion à réussie
+ */
+function loginUser($email, $password): bool
 {
-    $res =false;
+    $res = false;
     // Connection data
     $databaseConnection = getDatabaseConnection();
 
     // Création statement
-    $statement = $databaseConnection->prepare( '
+    $statement = $databaseConnection->prepare('
 			SELECT
 				password_uti
 			FROM
 				utilisateur
 			WHERE
 				email_uti = :email
-		' );
+		');
 
     // execute sql with actual values
-    $statement->execute( array(
-        'email' => trim( $email )
-    ) );
+    $statement->execute(array(
+        'email' => trim($email)
+    ));
 
     $passwordHash = $statement->fetch();
 
-    if($passwordHash)$res = password_verify($password, $passwordHash['password_uti']);
+    if ($passwordHash) $res = password_verify($password, $passwordHash['password_uti']);
 
-    if($res)
-    {
-    $infoUser = getUserWithEmailAddress($email);
-    createSession($infoUser);
+    if ($res) {
+        $infoUser = getUserWithEmailAddress($email);
+        createSession($infoUser);
     }
 
     return $res;
 }
 
-function createSession($info)
+/**
+ * Créer une session pour un utilisateur
+ *
+ * @param $info : les information de l'utilisateur
+ */
+function createSession($info): void
 {
     $_SESSION['user_info'] = $info;
     $_SESSION['is_logged_in'] = true;
@@ -251,13 +300,13 @@ function createSession($info)
  *
  * @return array $info
  */
-function getRowWithValue(string $tableName, string $column, string $value ): array
+function getRowWithValue(string $tableName, string $column, string $value): array
 {
     // get database connection
     $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
-    $statement = $databaseConnection->prepare( '
+    $statement = $databaseConnection->prepare('
 			SELECT
 				*
 			FROM
@@ -267,10 +316,10 @@ function getRowWithValue(string $tableName, string $column, string $value ): arr
     );
 
     // execute sql with actual values
-    $statement->setFetchMode( PDO::FETCH_ASSOC );
-    $statement->execute( array(
-        $column => trim( $value )
-    ) );
+    $statement->setFetchMode(PDO::FETCH_ASSOC);
+    $statement->execute(array(
+        $column => trim($value)
+    ));
 
     // get and return user
     $user = $statement->fetch();
@@ -282,31 +331,31 @@ function getRowWithValue(string $tableName, string $column, string $value ): arr
  *
  * @param string $email
  *
- * @return array|bool $userInfo
+ * @return array|bool $userInfo : information de l'utilisateur ou false si l'utilisateur n'existe pas
  */
-function getUserWithEmailAddress(string $email ): array|bool {
+function getUserWithEmailAddress(string $email): array|bool
+{
     // get database connection
     $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
-    $statement = $databaseConnection->prepare( '
+    $statement = $databaseConnection->prepare('
 			SELECT
 				*
 			FROM
 				utilisateur
 			WHERE
 				email_uti = :email
-		' );
+		');
 
     // execute sql with actual values
-    $statement->setFetchMode( PDO::FETCH_ASSOC );
-    $statement->execute( array(
-        'email' => trim( $email )
-    ) );
+    $statement->setFetchMode(PDO::FETCH_ASSOC);
+    $statement->execute(array(
+        'email' => trim($email)
+    ));
 
     // get and return user
-    $user = $statement->fetch();
-    return $user;
+    return $statement->fetch();
 }
 
 /**
@@ -316,39 +365,43 @@ function getUserWithEmailAddress(string $email ): array|bool {
  *
  * @return boolean
  */
-function isLoggedIn(): bool {
-    if ( ( isset( $_SESSION['is_logged_in'] ) && $_SESSION['is_logged_in'] ) && ( isset( $_SESSION['user_info'] ) && $_SESSION['user_info'] ) ) { // check session variables, user is logged in
+function isLoggedIn(): bool
+{
+    if ((isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in']) && (isset($_SESSION['user_info']) && $_SESSION['user_info'])) { // check session variables, user is logged in
         return true;
     } else { // user is not logged in
         return false;
     }
 }
 
-function loGoout(){
+/**
+ * Déconnect un utilisateur
+ */
+function loGoout(): void
+{
     session_destroy();
 }
 
 /**
- * Si l'utilisateur est connecter on le redirige
- *
- * @param void
- *
- * @return boolean
+ * Redirige si l'utilisateur est connectée
  */
-function loggedInRedirect()
+function loggedInRedirect(): void
 {
-    if ( isLoggedIn() ) { // user is logged in
+    if (isLoggedIn()) { // user is logged in
         // send them to the home page
-        header( 'location:'.INCLUDE_DIR.'index.php' );
+        header('location:' . INCLUDE_DIR . 'index.php');
     }
 }
 
 /**
+ * Enregistre un log d'un utilisateur
+ *
  * @param int $id_uti : id de l'utilisateur
  * @param string $ip : adresse ip utilisateur
  * @param boolean $connValue : etat de la connection
  */
-function saveLog(int $id_uti, string $ip, bool $connValue) {
+function saveLog(int $id_uti, string $ip, bool $connValue): void
+{
     $value = $connValue ? 'true' : 'false';
 
     // get database connection
@@ -383,30 +436,38 @@ function saveLog(int $id_uti, string $ip, bool $connValue) {
 }
 
 /**
- * Function to get the client IP address
- * @return array|false|string
+ * Fonction pour obtenir l'adresse ip du client
+ *
+ * @return string : l'adresse ip ou UNKNOWN si inconnue
  */
-function getIpClient(): bool|array|string
+function getIpClient(): string
 {
     $ipaddress = '';
     if (getenv('HTTP_CLIENT_IP'))
         $ipaddress = getenv('HTTP_CLIENT_IP');
-    else if(getenv('HTTP_X_FORWARDED_FOR'))
+    else if (getenv('HTTP_X_FORWARDED_FOR'))
         $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
-    else if(getenv('HTTP_X_FORWARDED'))
+    else if (getenv('HTTP_X_FORWARDED'))
         $ipaddress = getenv('HTTP_X_FORWARDED');
-    else if(getenv('HTTP_FORWARDED_FOR'))
+    else if (getenv('HTTP_FORWARDED_FOR'))
         $ipaddress = getenv('HTTP_FORWARDED_FOR');
-    else if(getenv('HTTP_FORWARDED'))
+    else if (getenv('HTTP_FORWARDED'))
         $ipaddress = getenv('HTTP_FORWARDED');
-    else if(getenv('REMOTE_ADDR'))
+    else if (getenv('REMOTE_ADDR'))
         $ipaddress = getenv('REMOTE_ADDR');
     else
         $ipaddress = 'UNKNOWN';
     return $ipaddress;
 }
 
-function EnableConnectionUser($id_uti): bool {
+/**
+ * Vérifie si l'utilisateur ne force pas la connection
+ * @param $id_uti : id de l'utilisateur
+ *
+ * @return bool : autorise ou non la connection de l'utilisateur
+ */
+function EnableConnectionUser($id_uti): bool
+{
     $res = false;
 
     // get database connection
@@ -429,7 +490,7 @@ function EnableConnectionUser($id_uti): bool {
                 ) as liste
             group by liste.status
             having now()-min(liste.date_log) < '00:20:00';
-		") ;
+		");
 
     // execute sql with actual values
     $statement->execute(array(
@@ -438,5 +499,82 @@ function EnableConnectionUser($id_uti): bool {
 
     return $res;
 }
+
+
+function addCommentaire(string $idArticle, string $nom, string $text): void
+{
+    $databaseConnection = getDatabaseConnection();
+
+        // create our sql statment
+        $statement = $databaseConnection->prepare('
+			INSERT INTO
+				COMMENTAIRE (
+					id_commentaire,
+					id_article,
+				    nom_commentaire,
+				    text_commentaire
+				)
+			VALUES (
+			    default,
+				:id_article,
+			    :nom_commentaire,
+                :text_commentaire
+			)
+		');
+
+        // execute sql with actual values
+        $statement->execute(array(
+            'id_article' => trim($idArticle),
+            'nom_commentaire' => trim($nom),
+            'text_commentaire' => trim($text)
+        ));
+}
+
+
+function renderCommentaire($id_article): string
+{
+    $return = "";
+    $databaseConnection = getDatabaseConnection();
+
+    // create our sql statment
+    $statement = $databaseConnection->prepare('
+			SELECT * 
+			FROM COMMENTAIRE
+			WHERE
+				id_article = :id_article
+		');
+
+    // execute sql with actual values
+    $statement->execute(array(
+        'id_article' => trim($id_article)
+    ));
+    $tab = $statement->fetchAll();
+
+
+    ob_start();
+    ?>
+    <div class="contenu" style="max-height: 450px;">
+        <h3>Commentaires</h3>
+        <?php foreach ($tab as $commentaire) {
+            ?>
+            <div>
+                <?php
+                $nom = $commentaire['nom_commentaire'];
+                $text = $commentaire['text_commentaire'];
+                ?>
+                <p><b><?=$nom;?></b>
+                <?=" : ".$text;?></p>
+            </div>
+            <?php
+        }
+        ?>
+        </table>
+    </div>
+    <?php
+    $return .= ob_get_contents();
+    ob_end_clean();
+    return $return;
+}
+
 
 ?>
