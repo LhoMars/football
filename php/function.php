@@ -363,7 +363,7 @@ function getUserWithEmailAddress(string $email): array|bool
  *
  * @param void
  *
- * @return boolean
+ * @return bool
  */
 function isLoggedIn(): bool
 {
@@ -398,7 +398,7 @@ function loggedInRedirect(): void
  *
  * @param int $id_uti : id de l'utilisateur
  * @param string $ip : adresse ip utilisateur
- * @param boolean $connValue : etat de la connection
+ * @param bool $connValue : etat de la connection
  */
 function saveLog(int $id_uti, string $ip, bool $connValue): void
 {
@@ -500,13 +500,19 @@ function EnableConnectionUser($id_uti): bool
     return $res;
 }
 
-
+/**
+ * Enregistre un commentaire
+ *
+ * @param string $idArticle : id de l'article pour le commentaire
+ * @param string $nom : nom de l'utilisateur
+ * @param string $text : commentaire de l'utilisateur
+ */
 function addCommentaire(string $idArticle, string $nom, string $text): void
 {
     $databaseConnection = getDatabaseConnection();
 
-        // create our sql statment
-        $statement = $databaseConnection->prepare('
+    // create our sql statment
+    $statement = $databaseConnection->prepare('
 			INSERT INTO
 				COMMENTAIRE (
 					id_commentaire,
@@ -522,15 +528,21 @@ function addCommentaire(string $idArticle, string $nom, string $text): void
 			)
 		');
 
-        // execute sql with actual values
-        $statement->execute(array(
-            'id_article' => trim($idArticle),
-            'nom_commentaire' => trim($nom),
-            'text_commentaire' => trim($text)
-        ));
+    // execute sql with actual values
+    $statement->execute(array(
+        'id_article' => trim($idArticle),
+        'nom_commentaire' => trim($nom),
+        'text_commentaire' => trim($text)
+    ));
 }
 
-
+/**
+ * Créer un rendu html pour les commentaires
+ *
+ * @param $id_article : id de l'article
+ *
+ * @return string : contenu html à afficher
+ */
 function renderCommentaire($id_article): string
 {
     $return = "";
@@ -562,8 +574,8 @@ function renderCommentaire($id_article): string
                 $nom = $commentaire['nom_commentaire'];
                 $text = $commentaire['text_commentaire'];
                 ?>
-                <p><b><?=$nom;?></b>
-                <?=" : ".$text;?></p>
+                <p><b><?= $nom; ?></b>
+                    <?= " : " . $text; ?></p>
             </div>
             <?php
         }
@@ -574,6 +586,56 @@ function renderCommentaire($id_article): string
     $return .= ob_get_contents();
     ob_end_clean();
     return $return;
+}
+
+/**
+ * Donne le premier commentaire d'un article
+ *
+ * @param $id_article : id de l'article
+ *
+ * @return array|bool : le commentaire le plus récent ou false si l'utilisateur n'existe pas
+ */
+function getFirstCom($id_article): array|bool
+{
+
+    // get database connection
+    $databaseConnection = getDatabaseConnection();
+
+    // create our sql statment
+    $statement = $databaseConnection->prepare("
+			SELECT *
+            FROM commentaire 
+            WHERE id_commentaire = (
+                SELECT max(id_commentaire)
+                FROM commentaire
+                WHERE id_article = :id_article
+                )
+		");
+
+    // execute sql with actual values
+    $statement->execute(array(
+        'id_article' => trim($id_article)
+    ));
+
+    return $statement->fetch();;
+}
+
+function testConn($id, $pass)
+{
+    // Connection data
+    $databaseConnection = getDatabaseConnection();
+
+    // Création statement
+    $res = $databaseConnection->query("
+                select email_uti, password_uti 
+                from utilisateur 
+                where email_uti = '$id' 
+                  and password_uti='$pass'");
+
+    if ($res->rowCount() > 0) {
+        return true;
+    }
+    return false;
 }
 
 

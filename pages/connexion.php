@@ -56,6 +56,7 @@ include_once(ROOT_PATH . 'pages/header.php');
                                     </span>
                         </div>
                     </form>
+
                 </div>
             </div>
         </div>

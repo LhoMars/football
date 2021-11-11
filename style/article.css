@@ -38,12 +38,12 @@
     text-align: left;
     -webkit-transition: all 0.4s ease;
     transition: all 0.4s ease;
+    max-width: 500px;
 }
 
-.article-content h3 {
+.article-content h3, h6 {
     color: #fff;
     text-align: left;
-    font-size: 28px;
     font-weight: 600;
     margin-bottom: 5px;
 }
@@ -75,6 +75,8 @@
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
     margin-top: 16px;
+    margin-bottom: 16px;
+    max-height: 75%;
 }
 
 .article-btn-primary {
@@ -89,34 +91,4 @@
     outline: none !important;
     border: none !important;
     box-shadow: none;
-}
-
-.article-content textarea {
-    position: static !important;
-    width: 100%;
-    padding: 8px 20px;
-    border-radius: 6px;
-    text-align: left;
-    background-color: #fff;
-    border: 0;
-    font-size: 15px;
-    font-weight: 300;
-    color: #8D8D8D;
-    outline: none;
-    resize: none;
-    height: 120px;
-    -webkit-transition: none;
-    transition: none;
-    margin-bottom: 14px;
-}
-
-.article-content textarea:hover, .article-content textarea:focus {
-    border: 0;
-    background-color: #ebeff8;
-    color: #8D8D8D;
-}
-
-.article-mv-up {
-    margin-top: -9px !important;
-    margin-bottom: 8px !important;
 }
