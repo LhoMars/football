@@ -67,7 +67,7 @@ function signUser($info): int
     $statement = $databaseConnection->prepare('
 			INSERT INTO
 				UTILISATEUR (
-                                        id_uti,
+                    id_uti,
 					id_club,
 					nom_uti,
 					prenom_uti,
@@ -77,7 +77,7 @@ function signUser($info): int
                                         date_inscription
 				)
 			VALUES (
-                                default,
+                default,
 				:id_club,
 				:nom_uti,
 				:prenom_uti,
@@ -91,10 +91,10 @@ function signUser($info): int
     // execute sql with actual values
     $statement->execute(array(
         'id_club' => trim($info['clubFavori']),
-        'nom_uti' => trim($info['nom']),
-        'prenom_uti' => trim($info['prenom']),
+        'nom_uti' => trim(strip_tags($info['nom'])),
+        'prenom_uti' => trim(strip_tags($info['prenom'])),
         'sexe_uti' => trim($info['sexe']),
-        'email_uti' => trim($info['email']),
+        'email_uti' => trim(strip_tags($info['email'])),
         'password_uti' => trim($info['password'])
     ));
 
@@ -143,30 +143,43 @@ function subscribeClub($id_uti, $clubs): void
  * @param $id_uti : id de lutilisateur
  * @param $infoFile : information du fichier avec $_FILES
  *
- * @return string : nom du fichier avec extension
  */
-function updateAvatar($id_uti, $infoFile): string
+function updateAvatar($id_uti, $infoFile)
 {
-    $databaseConnection = getDatabaseConnection();
+    dump($infoFile);
+    if (exif_imagetype($infoFile['tmp_name'])) {
+        dump("1");
+        if ($infoFile['size'] <= 4194304) {
 
-    $ext = pathinfo($infoFile['name'], PATHINFO_EXTENSION);
-//    dump($ext);
 
-    $nomFichier = $id_uti . '.' . $ext;
-//    dump($nomFichier);
+            $ext = pathinfo($infoFile['name'], PATHINFO_EXTENSION);
+//          dump($ext);
 
-    $statement = $databaseConnection->prepare('
+            $nomFichier = "{$id_uti}.{$ext}";
+//          dump($nomFichier);
+
+            // Chemin absolu de l'avatar de l'utilisateur
+            $uploadfile = ROOT_PATH . "asset/avatarUtilisateur/{$nomFichier}";
+
+            // Déplace le fichier de xamp/temp à l'endroit choisi
+            if (move_uploaded_file($infoFile['tmp_name'], $uploadfile)) {
+
+                $databaseConnection = getDatabaseConnection();
+
+                $statement = $databaseConnection->prepare('
 			update utilisateur
                         set image_uti = :nomFile
                         where id_uti = :id_uti;
 		');
 
-    $statement->execute(array(
-        'id_uti' => $id_uti,
-        'nomFile' => $nomFichier
-    ));
-
-    return $nomFichier;
+                $statement->execute(array(
+                    'id_uti' => $id_uti,
+                    'nomFile' => $nomFichier
+                ));
+            }
+        dump('ok');
+        }
+    }
 }
 
 /**
@@ -220,7 +233,7 @@ function updateUser($id_uti, $tab): void
 
             if ($colum !== "") {
                 $query .= " {$colum} = :{$colum},";
-                $params += [$colum => $value];
+                $params += [$colum => strip_tags($value)];
             }
         }
     }
@@ -351,7 +364,7 @@ function getUserWithEmailAddress(string $email): array|bool
     // execute sql with actual values
     $statement->setFetchMode(PDO::FETCH_ASSOC);
     $statement->execute(array(
-        'email' => trim($email)
+        'email' => trim(strip_tags($email))
     ));
 
     // get and return user
@@ -531,8 +544,8 @@ function addCommentaire(string $idArticle, string $nom, string $text): void
     // execute sql with actual values
     $statement->execute(array(
         'id_article' => trim($idArticle),
-        'nom_commentaire' => trim($nom),
-        'text_commentaire' => trim($text)
+        'nom_commentaire' => trim(strip_tags($nom)),
+        'text_commentaire' => trim(strip_tags($text))
     ));
 }
 

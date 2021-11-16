@@ -11,31 +11,37 @@
                     <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/articles.php">Articles</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= INCLUDE_DIR ?>">Vos News</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="<?= INCLUDE_DIR ?>">Les scores</a>
                 </li>
             </ul>
         </div>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <?php if (isset($_SESSION['user_info']['image_uti'])): ?>
+                    <div id="userAvatar">
+                        <img src="<?= INCLUDE_DIR ?>asset/avatarUtilisateur/<?= $_SESSION['user_info']['image_uti'] ?>">
+                    </div>
+            <?php endif; ?>
             <ul class="navbar-nav">
                 <?php if (isLoggedIn()) : ?>
+
                     <li class="nav-link">
                         Bonjour <?= $_SESSION['user_info']['nom_uti']; ?>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/parametre.php">Paramètre</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= INCLUDE_DIR ?>php/process_logout.php">Se Déconnecter</a>
                     </li>
                 <?php else : ?>
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/creationUtilisateur.php">S'insrire</a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/creationUtilisateur.php">S'inscrire</a>
+                    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/connexion.php">Se connecter</a>
-                </li>
-            <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/connexion.php">Se connecter</a>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

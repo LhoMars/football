@@ -18,7 +18,8 @@ require_once 'function.php';
 <script src="<?=INCLUDE_DIR?>js/inputImg.js" type="text/javascript"></script>
 
 <?php // Ajout fontawesome ?>
-<link href="<?=INCLUDE_DIR?>style/fontawesome/css/all.min.css" rel="stylesheet" type="text/css"/>
+<link href="<?=INCLUDE_DIR?>style/fontawesome/css/all.css" rel="stylesheet" type="text/css"/>
+<script src="<?=INCLUDE_DIR?>style/fontawesome/js/all.js" type="text/javascript"></script>
 
 <?php // Ajout des style perso ?>
 <link href="<?=INCLUDE_DIR?>style/scroll.css" rel="stylesheet" type="text/css"/>

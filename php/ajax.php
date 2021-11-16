@@ -12,9 +12,7 @@ switch ($_GET['action']):
         break;
 
     case'enregistrementCom':
-        dump('123');
         if (isset($_POST['idArticle']) && isset($_POST['nom']) && isset($_POST['text'])) {
-            dump('ok');
             addCommentaire($_POST['idArticle'], $_POST['nom'], $_POST['text']);
         }
         break;

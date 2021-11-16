@@ -31,29 +31,16 @@ if (isset($_POST['validSubmit'])) {
 
         // Vérifie si l'utilisateur à mis un avatar
         if (strcmp($_FILES['avatar']['name'], '')) {
-            $filename = updateAvatar($id, $_FILES['avatar']);
-
-            $uploaddir = './asset/avatarUtilisateur/';
-            $uploadfile = $uploaddir . basename($filename);
-//                dump($uploadfile);die;
-            // Déplace le fichier de xamp/temp à l'endroit choisi
-            if (move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadfile)) {
-//                    echo "Le fichier est valide, et a été téléchargé
-//                    avec succès. Voici plus d'informations :\n";
-//                } else {
-//                    echo "Attaque potentielle par téléchargement de fichiers.
-//                    Voici plus d'informations :\n";
-            }
-//                echo 'Voici quelques informations de débogage :';
-            dump($_FILES);
+            updateAvatar($id, $_FILES['avatar']);
         }
+
         // Vérifie si l'utilisateur à choisi des abbonement au club
         if (isset($_POST['clubNews'])) {
             subscribeClub($id, $_POST['clubNews']);
         }
         $userInfo = getUserWithEmailAddress(trim($_POST['email']));
         createSession($userInfo);
-        header("location:" . INCLUDE_DIR . "index.php");
+        //header("location:" . INCLUDE_DIR . "index.php");
     }
 }
 if ($_POST) {
@@ -149,7 +136,7 @@ include_once(ROOT_PATH . 'pages/header.php'); ?>
                         <div>
                             <label for="avatar">Choisir une photo de profil :</label>
                             <input id="avatar" class="form-control" type="file" name="avatar"
-                                   accept="image/png, image/jpg, image/jpeg">
+                                   accept="image/png, image/jpg, image/jpeg, image/gif">
                         </div>
                         <script>
                             var input = document.querySelector('#avatar');

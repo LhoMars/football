@@ -23,3 +23,16 @@ html, body {
 .container{
     color:#fff;
 }
+
+#userAvatar{
+    padding: 5px;
+    float: right;
+}
+#userAvatar img{
+    /*    max-width: 100%;
+        max-height: 100%;*/
+    width:70px;
+    height:70px;
+    object-fit: cover;
+    border-radius:100%;
+}
