@@ -148,7 +148,6 @@ function updateAvatar($id_uti, $infoFile)
 {
     dump($infoFile);
     if (exif_imagetype($infoFile['tmp_name'])) {
-        dump("1");
         if ($infoFile['size'] <= 4194304) {
 
 
@@ -161,7 +160,7 @@ function updateAvatar($id_uti, $infoFile)
             // Chemin absolu de l'avatar de l'utilisateur
             $uploadfile = ROOT_PATH . "asset/avatarUtilisateur/{$nomFichier}";
 
-            // Déplace le fichier de xamp/temp à l'endroit choisi
+            // Déplace le fichier de xampp/temp à l'endroit choisi
             if (move_uploaded_file($infoFile['tmp_name'], $uploadfile)) {
 
                 $databaseConnection = getDatabaseConnection();
@@ -177,7 +176,6 @@ function updateAvatar($id_uti, $infoFile)
                     'nomFile' => $nomFichier
                 ));
             }
-        dump('ok');
         }
     }
 }
@@ -633,6 +631,12 @@ function getFirstCom($id_article): array|bool
     return $statement->fetch();;
 }
 
+/**
+ * Test fonction connection
+ * @param $id
+ * @param $pass
+ * @return bool
+ */
 function testConn($id, $pass)
 {
     // Connection data
