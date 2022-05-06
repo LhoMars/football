@@ -1,0 +1,226 @@
+DROP TABLE if exists UTILISATEUR cascade;
+DROP TABLE if exists NEWS cascade;
+DROP TABLE if exists CLUB cascade;
+DROP TABLE if exists S_ABONNER cascade;
+DROP TABLE if exists COMMENTAIRE cascade;
+DROP TABLE if exists LOGS cascade;
+DROP TABLE if exists ARTICLE cascade;
+Drop table if exists rencontre cascade;
+Drop table if exists equipe cascade;
+DROP TABLE IF EXISTS ARBITRE CASCADE;
+DROP TABLE IF EXISTS CHAMPIONNAT CASCADE;
+DROP TABLE IF EXISTS SAISON CASCADE;
+
+DROP DOMAIN if exists email cascade;
+DROP DOMAIN if exists telephone cascade;
+
+create domain email
+as text check(value similar to '\A[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}\Z');
+
+create domain telephone 
+as text default '0600000000' check(value similar to '\A0[1-9]([-. ]?[0-9]{2}){4}\Z');
+
+-- -----------------------------------------------------------------------------
+--       TABLE : UTILISATEUR
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE UTILISATEUR
+   (
+    ID_UTI serial NOT NULL  ,
+    ID_CLUB int ,
+    NOM_UTI varchar(30) NOT NULL  ,
+    PRENOM_UTI varchar(30) NOT NULL  ,
+    SEXE_UTI varchar(15) NOT NULL  ,
+    EMAIL_UTI email NOT NULL unique,
+    PASSWORD_UTI varchar(64) NOT NULL  ,
+    DATE_INSCRIPTION date NULL  ,
+    IMAGE_UTI text NULL ,
+    CONSTRAINT PK_UTILISATEUR PRIMARY KEY (ID_UTI)
+   ) ;
+
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE UTILISATEUR
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_UTILISATEUR_CLUB
+     ON UTILISATEUR (ID_CLUB)
+    ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : CLUB
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE CLUB
+   (
+    ID_CLUB serial NOT NULL  ,
+    NOM_CLUB varchar(128) UNIQUE NOT NULL  ,
+    VILLE_CLUB varchar(128),
+    ICON_CLUB varchar(128),
+   CONSTRAINT PK_CLUB PRIMARY KEY (ID_CLUB)
+   ) ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : S_ABONNER
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE S_ABONNER
+   (
+    ID_UTI int NOT NULL  ,
+    ID_CLUB int NOT NULL ,   
+CONSTRAINT PK_S_ABONNER PRIMARY KEY (ID_UTI, ID_CLUB)
+   ) ;
+
+-- -----------------------------------------------------------------------------
+--       INDEX DE LA TABLE S_ABONNER
+-- -----------------------------------------------------------------------------
+
+CREATE  INDEX I_FK_S_ABONNER_UTILISATEUR
+     ON S_ABONNER (ID_UTI)
+    ;
+
+CREATE  INDEX I_FK_S_ABONNER_CLUB
+     ON S_ABONNER (ID_CLUB)
+    ;
+
+
+-- -----------------------------------------------------------------------------
+--       TABLE: LOGS
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE LOGS
+   (
+       id serial,
+       id_uti integer,
+       date_log timestamp ,
+       ip_log varchar(16),
+       status boolean,
+       constraint PK_LOGS primary key(id),
+	constraint FK_LOGS_UTILISATEUR foreign key(id_uti) references utilisateur (id_uti)
+   ) ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE: ARTICLE
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE ARTICLE
+   (
+       id_article serial,
+       titre_article varchar(255),
+       text_article varchar(255),
+       constraint PK_ARTICLE primary key(id_article)
+   ) ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE: COMMENTAIRE
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE COMMENTAIRE
+   (
+       id_commentaire serial,
+       id_article integer,
+       nom_commentaire varchar(255),
+       text_commentaire varchar(255),
+       constraint PK_COMMENTAIRE primary key(id_commentaire), 
+       constraint FK_COMMENTAIRE_ARTICLE foreign key(id_article) references article (id_article)
+   ) ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE: EQUIPE
+-- -----------------------------------------------------------------------------
+
+--CREATE TABLE equipe (
+--	id_equipe SERIAL,
+--	nom VARCHAR(30)NOT NULL,
+--	ville VARCHAR(30)NOT NULL,
+--	CONSTRAINT PK_equipe PRIMARY KEY(id_equipe),
+--	CONSTRAINT UK_nom UNIQUE(nom)
+--	);
+
+-- -----------------------------------------------------------------------------
+--       TABLE : CHAMPIONNAT
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE CHAMPIONNAT
+   (
+    ID_CHAMPIONNAT SERIAL ,
+    NOM VARCHAR(32) NULL,  
+    CONSTRAINT PK_CHAMPIONNAT PRIMARY KEY (ID_CHAMPIONNAT)
+   ) ;
+
+
+-- -----------------------------------------------------------------------------
+--       TABLE : ARBITRE
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE ARBITRE
+   (
+    ID_ARBITRE SERIAL,
+    NOM VARCHAR(32) NULL  ,
+    DATE_NAISSANCE DATE NULL  ,
+    DATE_PRO DATE NULL  
+,   CONSTRAINT PK_ARBITRE PRIMARY KEY (ID_ARBITRE)
+   ) ;
+
+
+-- -----------------------------------------------------------------------------
+--       TABLE : RENCONTRE
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE RENCONTRE
+   (
+    ID_CLUB_DOMICILE INT NOT NULL  ,
+    ID_CLUB_VISITEUR INT NOT NULL  ,
+    ID_ARBITRE INT NOT NULL  ,
+    DATE_MATCH DATE NULL  ,
+    SCORE_DOMICILE INT4 NULL  ,
+    SCORE_VISTEUR INT4 NULL, 
+    
+	CONSTRAINT PK_RENCONTRE PRIMARY KEY (ID_CLUB_DOMICILE, ID_CLUB_VISITEUR, ID_ARBITRE, DATE_MATCH),
+    CONSTRAINT FK_RENCONTRE_CLUB_DOM  FOREIGN KEY (ID_CLUB_DOMICILE) REFERENCES CLUB (ID_CLUB),
+	CONSTRAINT FK_RENCONTRE_CLUB_VIS	FOREIGN KEY (ID_CLUB_VISITEUR) REFERENCES CLUB (ID_CLUB),
+	CONSTRAINT FK_RENCONTRE_ARBITRE FOREIGN KEY (ID_ARBITRE) REFERENCES ARBITRE (ID_ARBITRE)
+   ) ;
+
+-- -----------------------------------------------------------------------------
+--       TABLE : SAISON
+-- -----------------------------------------------------------------------------
+
+CREATE TABLE SAISON
+   (
+   
+    ID_CLUB INT NOT NULL  ,
+    ID_CHAMPIONNAT INT NOT NULL  ,
+    ANNEE INT NOT NULL,
+	NB_BUTS_MARQUES INT4 NULL  ,
+    NB_BUTS_ENCAISSE INT4 NULL  ,
+    NB_POINTS INT4 NULL  ,
+    CONSTRAINT PK_SAISON PRIMARY KEY (ID_CLUB, ID_CHAMPIONNAT,ANNEE),
+    CONSTRAINT FK_SAISON_CLUB FOREIGN KEY (ID_CLUB) REFERENCES CLUB (ID_CLUB),
+	CONSTRAINT FK_SAISON_CHAMPIONNAT FOREIGN KEY (ID_CHAMPIONNAT) REFERENCES CHAMPIONNAT (ID_CHAMPIONNAT)
+       
+   ) ;
+
+-- -----------------------------------------------------------------------------
+--       CREATION DES REFERENCES DE TABLE
+-- -----------------------------------------------------------------------------
+
+
+ALTER TABLE UTILISATEUR ADD 
+     CONSTRAINT FK_UTILISATEUR_CLUB
+          FOREIGN KEY (ID_CLUB)
+               REFERENCES CLUB (ID_CLUB);
+
+ALTER TABLE S_ABONNER ADD 
+     CONSTRAINT FK_S_ABONNER_UTILISATEUR
+          FOREIGN KEY (ID_UTI)
+               REFERENCES UTILISATEUR (ID_UTI);
+
+ALTER TABLE S_ABONNER ADD 
+     CONSTRAINT FK_S_ABONNER_CLUB
+          FOREIGN KEY (ID_CLUB)
+               REFERENCES CLUB (ID_CLUB);
+
+
+-- -----------------------------------------------------------------------------
+--                FIN DE GENERATION
+-- ---------------------------------------------------------------------------------------

@@ -1,0 +1,135 @@
+INSERT INTO club
+    values
+(1,'PSG','Paris','PSG2'),
+(26,'ASM','Monaco',''),
+(3,'ASSE','Saint-etienne',''),
+(42,'FCGB','Bordeaux',''),
+(56,'OL','Lyon','Lyon2'),
+(66,'OM','Marseille','Marseille2'),
+(71,'FCN','Nantes',''),
+(89,'OGC Nice','Nice',''),
+(9,'Stade Malherbe de Caen','Caen','Caen2'),
+(10,'En Avant de Guingamp','Guingamp',''),
+(11,'SCO','Angers',''),
+(12,'Montpellier-Herault Sport Club','Montpellier',''),
+(103,'TFC','Toulouse','Toulouse2'),
+(14,'ASC','Amiens',''),
+(105,'Stade Rennais Football Club','Rennes','Rennes2'),
+(16,'ESTAC','Troyes',''),
+(17,'LOSC','Lille',''),
+(108,'DFCO','Dijon',''),
+(19,'FC Metz','Metz',''),
+(200,'RCS','Strasbourg',''),
+(210,'TEST','TestCity',''),
+(220,'TEST2','TestCity',''),
+(230,'TEST3','TestCity',''),
+(240,'TEST4','TestCity','');
+
+--(default,'Rennes','Rennes2'),
+--(default,'PSG','L1','PSG2'),
+--(default,'Lyon','L1','Lyon2'),
+--(default,'Lorient','L1','Lorient2'),
+--(default,'Marseille','L1','Marseille2'),
+--(default,'Auxerre','L2','Auxerre2'),
+--(default,'Sochaux','L2','Sochaux2'),
+--(default,'Le Havre','L2','LeHavre2'),
+--(default,'Toulouse','L2','Toulouse2'),
+--(default,'Caen','L2','Caen2');
+
+INSERT INTO ARTICLE
+    values
+(default, 'First','Un text'),
+(default, 'Second','Deux text text'),
+(default, 'Third','Trois text text text'),
+(default, 'Fourth','Quatre text text text text'),
+(default, 'Fifth','Cinq text text text text text'),
+(default, 'Sixth','Six text text text text text text'),
+(default, 'Seventh','Sept text text text text text text'),
+(default, 'Eighth','Huit text text text text text text text'),
+(default, 'Ninth','Neuf text text text text text text text text'),
+(default, 'Tenth','Dix text text text text text text text text text'),
+(default, 'Lorem ipsum','dolor sit amet, consectetur adipiscing elit. Nulla et libero aliquet mi venenatis dapibus. Morbi ac felis ante. Integer lacinia cursus nunc, eget posuere enim fringilla et. Aenean pulvinar lacus et leo consectetur volutpat. In pretium sollicitudin leo.');
+
+INSERT INTO COMMENTAIRE
+    values
+(default, 1,'moi','un text');
+
+INSERT INTO UTILISATEUR
+    values
+(default,1,'test','test','homme','test@test.com','azerty',now(),null);
+
+--ARBITRE
+
+insert into arbitre(nom,date_naissance) values
+('ABED',now()- interval '28 year'        ),
+('BASTIEN',now()-interval '34 year'    ),
+('BEN EL HADJ',now()-interval '39 year' ),
+('BRISARD',now()-interval '31 year'    ),
+('BUQUET',now()-interval '40 year'),
+('CHAPRON',now()-interval '45 year'),
+('Delerue',now()-interval '40 year'   ),
+('Desiage',now()-interval '43 year' ),
+('GAUTIER',now()-interval '39 year'   ),
+('HAMEL',now()-interval '36 year'      ),
+('JOCHEM',now()-interval '39 year'  ),
+('LEONARD',now()-interval '36 year'   ),
+('Lesage',now()-interval '42 year'    ),
+('Letexier',now()-interval '28 year' ),
+('MILLOT',now()-interval '35 year'    ),
+('Moreira',now()-interval '40 year' ),
+('Rainville',now()-interval '35 year' ),
+('Schneider',now()-interval '38 year'  ),
+('Turpin',now()-interval '35 year'   );
+
+--CHAMPIONNAT
+
+insert into championnat(nom) values('Ligue1'),('Ligue2');
+
+
+--EQUIPE
+
+--INSERT INTO equipe(id_equipe,nom,ville) 
+--VALUES 
+--(1,'PSG','Paris'),
+--(26,'ASM','Monaco'),
+--(3,'ASSE','Saint-etienne'),
+--(42,'FCGB','Bordeaux'),
+--(56,'OL','Lyon'),
+--(66,'OM','Marseille'),
+--(71,'FCN','Nantes'),
+--(89,'OGC Nice','Nice'),
+--(9,'Stade Malherbe de Caen','Caen'),
+--(10,'En Avant de Guingamp','Guingamp'),
+--(11,'SCO','Angers'),
+--(12,'Montpellier-Herault Sport Club','Montpellier'),
+--(103,'TFC','Toulouse'),
+--(14,'ASC','Amiens'),
+--(105,'Stade Rennais Football Club','Rennes'),
+--(16,'ESTAC','Troyes'),
+--(17,'LOSC','Lille'),
+--(108,'DFCO','Dijon'),
+--(19,'FC Metz','Metz'),
+--(200,'RCS','Strasbourg');
+
+-- SAISON
+insert into saison values
+(1,1,2018,0,0,0),
+(26,1,2018,0,0,0),
+(3,1,2018,0,0,0),
+(42,1,2018,0,0,0),
+(56,1,2018,0,0,0),
+(66,1,2018,0,0,0),
+(71,1,2018,0,0,0),
+(89,1,2018,0,0,0),
+(9,1,2018,0,0,0),
+(10,1,2018,0,0,0),
+(11,1,2018,0,0,0),
+(12,1,2018,0,0,0),
+(103,1,2018,0,0,0),
+(14,1,2018,0,0,0),
+(105,1,2018,0,0,0),
+(16,1,2018,0,0,0),
+(17,1,2018,0,0,0),
+(108,1,2018,0,0,0),
+(19,1,2018,0,0,0),
+(200,1,2018,0,0,0);
