@@ -6,7 +6,7 @@
     require_once "../php/includeAll.php";
     loggedInRedirect();
     getDatabaseConnection();
-    $clubs = getDataFromDataBase("club");
+    $clubs = getDataFromDataBase(4,"club");
     ?>
 </head>
 <body>
