@@ -19,34 +19,10 @@ function dump($t): void
  *
  * @return PDO|null : objet PDO de bdd ou rien si la connexion à échoué
  */
-function getDatabaseConnection($role): PDO|null
+function getDatabaseConnection(): PDO|null
 {
-    $res = false;
-    // Connection data
-    $databaseConnection = new PDO('pgsql:host=localhost;dbname=footBall;password=admin;user=adminFoot;port=5432');
-
-    // Création statement
-    $statement = $databaseConnection->prepare('
-			SELECT
-				*
-			FROM
-				roles
-			WHERE
-				id = :id
-		');
-
-    // execute sql with actual values
-    $statement->execute(array(
-        'id' => trim($role)
-    ));
-
-    $infoRoles = $statement->fetch();
-
-    $user = $infoRoles['nom'];
-    $pass = $infoRoles['password'];
-
     try { // connect to database and return connections
-        return new PDO('pgsql:host=localhost;dbname=footBall;password='.$pass.';user='.$user.';port=5432');
+        return new PDO('pgsql:host=localhost;dbname=footBall;password=admin;user=adminFoot;port=5432');
     } catch (PDOException $e) {
         print "Erreur connection ! : " . $e->getMessage() . "<br/>";
         die();
@@ -60,10 +36,10 @@ function getDatabaseConnection($role): PDO|null
  *
  * @return bool|array : false si la table n'existe pas ou le tableau des données
  */
-function getDataFromDataBase($role, $tableName): bool|array
+function getDataFromDataBase($tableName): bool|array
 {
     // get database connection
-    $databaseConnection = getDatabaseConnection($role);
+    $databaseConnection = getDatabaseConnection();
     // create our sql statment
     $statement = $databaseConnection->prepare('SELECT *
                                                 FROM ' . $tableName);
@@ -85,7 +61,7 @@ function getDataFromDataBase($role, $tableName): bool|array
 function signUser($info): int
 {
     // get database connection
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
     $statement = $databaseConnection->prepare('
@@ -134,7 +110,7 @@ function signUser($info): int
  */
 function subscribeClub($id_uti, $clubs): void
 {
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
     foreach ($clubs as $club) {
 
 //        dump($club);die;
@@ -187,7 +163,7 @@ function updateAvatar($id_uti, $infoFile)
             // Déplace le fichier de xampp/temp à l'endroit choisi
             if (move_uploaded_file($infoFile['tmp_name'], $uploadfile)) {
 
-                $databaseConnection = getDatabaseConnection(4);
+                $databaseConnection = getDatabaseConnection();
 
                 $statement = $databaseConnection->prepare('
 			update utilisateur
@@ -212,7 +188,7 @@ function updateAvatar($id_uti, $infoFile)
  */
 function updateUser($id_uti, $tab): void
 {
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     $query = ' UPDATE
                     utilisateur
@@ -286,7 +262,7 @@ function loginUser($email, $password): bool
 {
     $res = false;
     // Connection data
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // Création statement
     $statement = $databaseConnection->prepare('
@@ -305,11 +281,7 @@ function loginUser($email, $password): bool
 
     $passwordHash = $statement->fetch();
 
-    if ($passwordHash){
-        if(strcmp($password, $passwordHash['password_uti']) === 0){
-            $res = true;
-        }
-    }//password_verify($password, $passwordHash['password_uti']);
+    if ($passwordHash) $res = password_verify($password, $passwordHash['password_uti']);
 
     if ($res) {
         $infoUser = getUserWithEmailAddress($email);
@@ -342,7 +314,7 @@ function createSession($info): void
 function getRowWithValue(string $tableName, string $column, string $value): array
 {
     // get database connection
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
     $statement = $databaseConnection->prepare('
@@ -375,7 +347,7 @@ function getRowWithValue(string $tableName, string $column, string $value): arra
 function getUserWithEmailAddress(string $email): array|bool
 {
     // get database connection
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
     $statement = $databaseConnection->prepare('
@@ -444,7 +416,7 @@ function saveLog(int $id_uti, string $ip, bool $connValue): void
     $value = $connValue ? 'true' : 'false';
 
     // get database connection
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
     $statement = $databaseConnection->prepare('
@@ -510,7 +482,7 @@ function EnableConnectionUser($id_uti): bool
     $res = false;
 
     // get database connection
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
     $statement = $databaseConnection->prepare("
@@ -548,7 +520,7 @@ function EnableConnectionUser($id_uti): bool
  */
 function addCommentaire(string $idArticle, string $nom, string $text): void
 {
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
     $statement = $databaseConnection->prepare('
@@ -585,7 +557,7 @@ function addCommentaire(string $idArticle, string $nom, string $text): void
 function renderCommentaire($id_article): string
 {
     $return = "";
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
     $statement = $databaseConnection->prepare('
@@ -619,6 +591,7 @@ function renderCommentaire($id_article): string
             <?php
         }
         ?>
+        </table>
     </div>
     <?php
     $return .= ob_get_contents();
@@ -637,7 +610,7 @@ function getFirstCom($id_article): array|bool
 {
 
     // get database connection
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // create our sql statment
     $statement = $databaseConnection->prepare("
@@ -667,7 +640,7 @@ function getFirstCom($id_article): array|bool
 function testConn($id, $pass)
 {
     // Connection data
-    $databaseConnection = getDatabaseConnection(4);
+    $databaseConnection = getDatabaseConnection();
 
     // Création statement
     $res = $databaseConnection->query("
