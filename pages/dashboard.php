@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Connexion</title>
+    <title>Admin Dashboard</title>
     <?php
     require_once "../php/includeAll.php";
 
@@ -27,23 +27,7 @@
 
     }
     ?>
-    <!DOCTYPE html>
-    <!--
-    To change this license header, choose License Headers in Project Properties.
-    To change this template file, choose Tools | Templates
-    and open the template in the editor.
-    -->
-    <html>
-    <script src="JS/script.js"></script>
-
-    <head>
-        <meta charset="UTF-8">
-        <title>Admin Dashboard</title>
-
-        <link href="CSS/style.css" rel="stylesheet" type="text/css"/>
-
-    </head>
-
+</head>
 <body>
 <?php
 include_once(ROOT_PATH . 'pages/header.php');
