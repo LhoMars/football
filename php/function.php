@@ -197,7 +197,6 @@ function updateUser($id_uti, $tab): void
     $params = array();
     foreach ($tab as $key => $value) {
         if ($value != '') {
-            $colum = '';
 
             switch ($key) {
                 case 'nom':
@@ -321,7 +320,7 @@ function getRowWithValue(string $tableName, string $column, string $value): arra
 			SELECT
 				*
 			FROM
-				' . $tableName . '
+				:' . $tableName . '
 			WHERE
 				' . $column . ' = :' . $column
     );
@@ -329,6 +328,7 @@ function getRowWithValue(string $tableName, string $column, string $value): arra
     // execute sql with actual values
     $statement->setFetchMode(PDO::FETCH_ASSOC);
     $statement->execute(array(
+        $tableName => trim($tableName),
         $column => trim($value)
     ));
 
@@ -631,28 +631,25 @@ function getFirstCom($id_article): array|bool
     return $statement->fetch();;
 }
 
-/**
- * Test fonction connection
- * @param $id
- * @param $pass
- * @return bool
- */
-function testConn($id, $pass)
+function getDatesRencontre()
 {
-    // Connection data
     $databaseConnection = getDatabaseConnection();
 
-    // Création statement
-    $res = $databaseConnection->query("
-                select email_uti, password_uti 
-                from utilisateur 
-                where email_uti = '$id' 
-                  and password_uti='$pass'");
-
-    if ($res->rowCount() > 0) {
-        return true;
+    $res = $$databaseConnection->query("select distinct date_match from rencontre order by date_match DESC");
+    while ($ligne = $res->fetch()) {
+        echo("<option value=$ligne[0]> $ligne[0] </option>");
     }
-    return false;
+}
+
+
+function getClubIntoSelect()
+{
+    $databaseConnection = getDatabaseConnection();
+
+    $res = $$databaseConnection->query("select * from club");
+    while ($ligne = $res->fetch()) {
+        echo("<option value=$ligne[0]> $ligne[1] </option>");
+    }
 }
 
 

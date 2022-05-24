@@ -1,0 +1,62 @@
+
+
+.dashboard {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard-grid {
+    display: inline-grid;
+    grid-template-rows: 100px 100px 100px;
+    grid-template-columns: 100px 100px 100px;
+    grid-gap: 3px;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 400px 400px;
+    grid-gap: 5px;
+    float: left !important;
+    width: 95% !important;
+}
+
+.dashboard-container {
+    border: dotted 2px black;
+    border: double 2px black;
+    grid-auto-rows: 25% ;
+    grid-template-columns: unset;
+    grid-template-rows: unset;
+    overflow: scroll;
+    overflow-y: scroll;
+}
+
+.scoresManuel {
+    display: flex;
+    margin: auto;
+    flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
+    width: 200px;
+}
+
+.scoreAuto {
+    display: flex;
+    margin: auto;
+    flex-wrap: wrap;
+    height: 80%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+}
+
+.score-container {
+    margin: 10px;
+}
+
+.scoreInput {
+    width: 40px;
+}
+
+.rencontreForm {
+    margin: 10px;
+}
