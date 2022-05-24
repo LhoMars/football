@@ -1,16 +1,16 @@
 -- 				Initialise les rencontre
 create or replace function SET_RENCONTRE() returns boolean as $$
 DECLARE
-	res boolean;
+res boolean;
 	nb_club integer;
 BEGIN
 	nb_club := (SELECT COUNT(*) FROM CLUB);
 
 	IF nb_club < 20 OR nb_club > 20 THEN
 	    return true;
-	END IF;
+END IF;
 
-	return false;
+return false;
 
 END ;
 $$ LANGUAGE 'plpgsql';
@@ -22,7 +22,7 @@ DROP FUNCTION IF EXISTS ADD_CLUB_SAISON();
 
 create or replace function ADD_CLUB_SAISON(idClub integer, idChamp integer, anneeSaison integer, maxEquipe integer default 20) returns boolean as $$
 DECLARE
-    nb_club integer;
+nb_club integer;
     res boolean;
 BEGIN
 	nb_club = (SELECT COUNT(*) FROM saison WHERE id_championnat = idChamp AND annee = anneeSaison);
@@ -33,16 +33,16 @@ BEGIN
             IF NOT EXISTS (SELECT id_club FROM saison WHERE id_club = idClub AND annee = anneeSaison) THEN
                 INSERT INTO SAISON (id_club, id_championnat, annee) values (idClub, idChamp, anneeSaison);
                 res = true;
-            ELSE
+ELSE
                 res = false;
                 raise notice 'déjà présente';
-            END IF;
-    ELSE
+END IF;
+ELSE
         res = false;
 	    raise notice 'pas de club avec cet id';
-    END IF;
+END IF;
 
-    return res;
+return res;
 END;$$ LANGUAGE 'plpgsql';
 
 
@@ -56,36 +56,34 @@ DROP FUNCTION IF EXISTS ADD_CLUBS_SAISON();
 
 create or replace function ADD_CLUBS_SAISON(idClub integer[], idChamp integer, anneeSaison integer, maxEquipe integer default 20) returns boolean as $$
 DECLARE
-    nb_club integer;
+nb_club integer;
     res boolean;
 BEGIN
 	nb_club = (SELECT COUNT(*) FROM saison WHERE id_championnat = idChamp AND annee = anneeSaison);
 	IF nb_club + ARRAY_LENGTH(idClub,1) > maxEquipe THEN
 	    raise notice 'Trop de club à ajouter ou saison complete';
 	    res = false;
-	ELSE
+ELSE
 	    FOR i in 0..ARRAY_LENGTH(idClub,1) LOOP
 	        res := ADD_CLUB_SAISON(i, idChamp, anneeSaison, maxEquipe);
-        END LOOP;
+END LOOP;
 	    res = true;
-    END IF;
+END IF;
 
-    return res;
+return res;
 END;$$ LANGUAGE 'plpgsql';
 
 
 select ADD_CLUBS_SAISON(ARRAY[1,2], 1, 2018);
 
 
-
-delete from rencontre;
 --				Generation des match saison
 DROP FUNCTION IF EXISTS generate_saison;
 create function generate_saison(idchamp integer, anneechamp integer, datematch date) returns boolean
-	language plpgsql
+    language plpgsql
 as $$
 DECLARE
-    liste_equipe integer[];
+liste_equipe integer[];
     liste_arbitre integer[];
     h integer;
     temp integer;
@@ -103,7 +101,7 @@ BEGIN
     IF h < 20 OR h > 20 THEN
         res := false;
         raise notice 'Le nombre d équipe n est pas valable, nb équipes : %', h;
-    ELSE
+ELSE
 
         -- boucle du nombre de jour
         FOR j in 1..array_length(liste_equipe,1)-1 LOOP
@@ -118,32 +116,32 @@ BEGIN
             h := ARRAY_LENGTH(liste_equipe,1);
 
             -- boucle du d'ajout des rencontres avec le tableau des équipe
-            FOR i in 1..ARRAY_LENGTH(liste_equipe,1)/2 LOOP
+FOR i in 1..ARRAY_LENGTH(liste_equipe,1)/2 LOOP
                 --raise notice 'match : %', i;
                 --raise notice 'domicile : %', liste_equipe[i];
                 --raise notice 'visiteur : %', liste_equipe[h];
                 INSERT INTO RENCONTRE values (liste_equipe[i], liste_equipe[h], liste_arbitre[i], dateMatch, 0, 0);
-                INSERT INTO RENCONTRE values (liste_equipe[h], liste_equipe[i], liste_arbitre[i], dateMatch+(ARRAY_LENGTH(liste_equipe,1)+7), 0, 0);
-                h := h-1;
-            END LOOP;
+INSERT INTO RENCONTRE values (liste_equipe[h], liste_equipe[i], liste_arbitre[i], dateMatch+(ARRAY_LENGTH(liste_equipe,1)+7), 0, 0);
+h := h-1;
+END LOOP;
 
             dateMatch := dateMatch+7;
 
             -- refonte du tableau pour changer les matchs de la prochaine journées
             temp := liste_equipe[2];
-            FOR k in 2..array_length(liste_equipe,1) LOOP
+FOR k in 2..array_length(liste_equipe,1) LOOP
                 IF k = array_length(liste_equipe,1) THEN
                     liste_equipe[k] := temp;
-                ELSE
+ELSE
                 liste_equipe[k] := liste_equipe[k+1];
-                END IF;
-            END LOOP;
+END IF;
+END LOOP;
 
-        END LOOP;
+END LOOP;
         res := true;
-    END IF;
+END IF;
 
-    return res;
+return res;
 END;
 $$;
 
@@ -173,13 +171,14 @@ Select * from liste_rencontre('2022-01-05');
 
 
 --				Obtenir le nb de point pour un match
-DROP FUNCTION IF EXISTS update_club_saison();
+DROP FUNCTION IF EXISTS update_club_saison(id_club integer, id_champ integer, anne integer);
 CREATE FUNCTION update_club_saison(id_club integer, id_champ integer, anne integer) RETURNS void as $$
 DECLARE
 
 BEGIN
 
 END;$$ LANGUAGE 'plpgsql';
+
 
 --              Modifier une rencontre
 --              ("OM", "ASM", "2-1", "2013-02-09", "Mr Durand")
