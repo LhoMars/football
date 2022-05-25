@@ -28,7 +28,7 @@ Utilisateur:::user --> connection
     
 connectionAdmin -- <<extend>> --> intialiseC
 connectionAdmin -- <<extend>> --> intialiseR
-connection -- <<extends>> --> connection
+connection -- <<extends>> --> commente
 serveurBdd <--> intialise
 ```
 
