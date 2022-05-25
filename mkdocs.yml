@@ -6,11 +6,8 @@ edit_uri: 'edit/main/docs/'
 
 nav:
     - Home: index.md
-    - List Pages:
-        - pages/index.md
-        - page 1: page1.md
-        - page2.md
-    - Help Page: help.md
+    - Utilisation :
+        - Panel admin: pages/admin.md
 
 theme:
     name: material
