@@ -13,19 +13,15 @@ Ce diagramme présente les fonctionnalités disponibles sur l'application
 
 ```mermaid
 graph TB
-rencontre(rencontre un prospect)
-identifie(s'identifie)
-ajoutpr(ajoute un prospect)
-recherchepr(recherche un prospect)
-sync(syncroniser les données)
-serveurBdd[(Serveur distant)]
+intialise(intialise un championnat)
+commente(commente un article)
+serveurBdd[(Serveur de base de données)]
 
-Commercial:::user --> rencontre
+Admin:::user --> intialise
     classDef user fill:#0acf00;
-    
-identifie -- <<include>> --> rencontre
-rencontre -- <<extend>> --> ajoutpr
-rencontre -- <<extend>> --> recherchepr
-rencontre -- <<extend>> --> sync
-serveurBdd <--> sync
+
+Utilisateur:::commente 
+    classDef user fill:#3355ff;
+
+serveurBdd <--> intialise
 ```
