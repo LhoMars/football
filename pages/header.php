@@ -10,9 +10,12 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/articles.php">Articles</a>
                 </li>
+                <?php if(isAdmin()):
+                ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="<?= INCLUDE_DIR ?>">Les scores</a>
+                    <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/dashboard.php">Le dashboard</a>
                 </li>
+                <?php endif; ?>
             </ul>
         </div>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -26,9 +29,6 @@
 
                     <li class="nav-link">
                         Bonjour <?= $_SESSION['user_info']['nom_uti']; ?>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= INCLUDE_DIR ?>pages/parametre.php">Paramètre</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= INCLUDE_DIR ?>php/process_logout.php">Se Déconnecter</a>

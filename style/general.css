@@ -38,3 +38,131 @@ html, body {
     object-fit: cover;
     border-radius:100%;
 }
+
+
+
+.Calendrier_General{
+    background: #07252d;
+}
+
+.Calendrier_General_Content{
+    text-align: center;
+}
+
+.Calendrier_General_MainTitle{
+    position: relative;
+    color: #0e3742;
+    padding-top: 3.5%;
+    font-size: 4.5em;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    line-height: 0.80em;
+    outline: none;
+    color: #fff;
+    text-shadow: 0 0 10px #03bcf4,
+    0 0 20px #03bcf4,
+    0 0 40px #03bcf4,
+    0 0 80px #03bcf4,
+    0 0 160px #03bcf4;
+}
+
+.Calendrier_General_SubTitle{
+    position: relative;
+    color: #0e3742;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    font-size: 3.5em;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    line-height: 0.80em;
+    outline: none;
+    color: #fff;
+    text-shadow: 0 0 10px #03bcf4,
+    0 0 20px #03bcf4,
+    0 0 40px #03bcf4,
+    0 0 80px #03bcf4,
+    0 0 140px #03bcf4;
+}
+
+.Calendrier_General_Container{
+    padding-top: 15%;
+}
+
+.Calendrier_General_Container_Button{
+    position: relative;
+    text-align: center;
+    width: 250px;
+    padding: 10px;
+    font-size: 1em;
+    color: #15f4ee;
+    font-weight: 200;
+    border: 3px solid #15f4ee;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    cursor: pointer;
+    border-radius: 100px;
+    transition: 1.5s;
+    background-color: #0e3742;
+}
+
+.Calendrier_General_Container_Button:hover{
+    box-shadow: 0 5px 60px 0 #15f4ee inset, 0 5px 60px 0 #15f4ee inset,
+    0 5px 60px 0 #15f4ee inset, 0 5px 60px 0 #15f4ee inset;
+    text-shadow: 0 0 5px;
+    color: #fff;
+}
+
+@media screen and (max-width: 1000px){
+    .Calendrier_General_Title{
+        font-size: 4.5em;
+    }
+}
+
+@media screen and (max-width: 750px){
+    .Calendrier_General_Title{
+        font-size: 3.5em;
+    }
+}
+
+@media screen and (max-width: 1000px){
+    .Calendrier_General_Subtitle{
+        font-size: 2.5em;
+    }
+}
+
+@media screen and (max-width: 750px){
+    .Calendrier_General_Subtitle{
+        font-size: 2em;
+    }
+}
+
+.Calendrier_MatchNonJoue{
+    color: white;
+    border: 1px solid white;
+    align-content: center;
+    justify-content: center;
+    margin: 0 auto;
+    text-align: center;
+    width: 70%;
+}
+
+.Calendrier_MatchNonJoue_Header{
+    font-size: 1.5em;
+}
+
+.Calendrier_MatchNonJoue_Header_Title{
+    border: 1px solid white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.Calendrier_MatchNonJoue_Body_Row{
+}
+
+.Calendrier_MatchNonJoue_Body_Row_Infos{
+    border: 1px solid white;
+}

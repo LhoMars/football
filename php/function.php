@@ -404,46 +404,16 @@ function loggedInRedirect(): void
     }
 }
 
-/**
- * Enregistre un log d'un utilisateur
- *
- * @param int $id_uti : id de l'utilisateur
- * @param string $ip : adresse ip utilisateur
- * @param bool $connValue : etat de la connection
- */
-function saveLog(int $id_uti, string $ip, bool $connValue): void
+function isAdmin(): bool
 {
-    $value = $connValue ? 'true' : 'false';
+    return (isLoggedIn() && $_SESSION['user_info']['admin_uti']);
+}
 
-    // get database connection
-    $databaseConnection = getDatabaseConnection();
-
-    // create our sql statment
-    $statement = $databaseConnection->prepare('
-			INSERT INTO
-				LOGS (
-				    id,
-                    id_uti,
-					date_log,
-					ip_log,
-					status
-				)
-			VALUES (
-                default,
-			    :id_uti,
-				now(),
-				:ip_log,
-				:status                                
-			)
-		');
-
-    // execute sql with actual values
-    $statement->execute(array(
-        'id_uti' => trim($id_uti),
-        'ip_log' => trim($ip),
-        'status' => trim($value)
-    ));
-
+function notAdminRedirect(): void
+{
+    if (!isAdmin()) {
+        header('location:' . INCLUDE_DIR . 'index.php');
+    }
 }
 
 /**
@@ -652,5 +622,61 @@ function getClubIntoSelect()
     }
 }
 
+/**
+ * @autor : Marcel Lhote
+ * @description : créer les rencontres des équipes d'une saison
+ * @param PDO $c
+ * @param int $champ : ligue
+ * @param string $dateMatch1 : date du premier match
+ * @return bool|void
+ */
+function createRencontres(int $champ, string $dateMatch1)
+{
+    $databaseConnection = getDatabaseConnection();
 
+    try {
+        $statement = "select generate_rencontre(?, ?)";
+        $req_prepare = $databaseConnection->prepare($statement);
+        $req_prepare->bindParam(1, $champ);
+        $req_prepare->bindParam(2, $dateMatch1);
+
+        $req_prepare->execute();  //la requête est exécutée
+
+        if ($req_prepare->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    } catch (PDOException $ex) {
+        print_r($ex);
+    }
+}
+
+/**
+ * @autor : Marcel Lhote
+ * @description : Créer les équipes pour saison
+ * @param PDO $c
+ * @param int $champ : la ligue
+ * @param int $annee : l'annee de la saison
+ * @return bool|void
+ */
+function createSaison(int $champ, int $annee)
+{
+    $databaseConnection = getDatabaseConnection();
+
+    try {
+        $statement = "select generate_saison(?, ?)";
+        $req_prepare = $databaseConnection->prepare($statement);
+        $req_prepare->bindParam(1, $champ);
+        $req_prepare->bindParam(2, $annee);
+
+        $req_prepare->execute();  //la requête est exécutée
+
+        if ($req_prepare->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    } catch (PDOException $ex) {
+        print_r($ex);
+    }
+}
 ?>

@@ -9,7 +9,6 @@
     if (isset($_POST['validSubmit']) && isset($_POST['email']) && isset($_POST['password'])) {
         $t = loginUser($_POST['email'], $_POST['password']);
         $infoUser = getUserWithEmailAddress($_POST['email']);
-        if (isset($infoUser['id_uti'])) saveLog($infoUser['id_uti'], getIpClient(), isLoggedIn());
         if ($t) {
             header("location:" . INCLUDE_DIR . "index.php");
         }
@@ -49,7 +48,7 @@ include_once(ROOT_PATH . 'pages/header.php');
                         </div>
                         <div class="form-button mt-3">
                             <button id="validSubmit" type="submit" name="validSubmit" class="btn btn-primary">
-                                S'inscrire
+                                Se connecter
                             </button>
                             <span id="errorMesage" style="color: red; text-align: center;">
                                         Identifiant ou mot de passe inconnue

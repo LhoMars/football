@@ -6,7 +6,7 @@
     require_once "../php/includeAll.php";
 
     //admin redirection
-
+    notAdminRedirect();
 
     $generateSaison = null;
     $generateRencontres = null;
@@ -56,60 +56,6 @@ include_once(ROOT_PATH . 'pages/header.php');
                 <input type="submit" value="Valider">
             </form>
             <p>Résutat : <?= $generateRencontres ?> </p>
-        </div>
-        <div class="dashboard-container">
-            <h2>Saisie des scores</h2>
-            <form class="rencontreForm" action="envoyerScoreManuel.php" method="POST">
-
-                <!-- <select id="rencontre" name="rencontre" onChange="changeRencontre(this.value)">
-                        <option value="0">Choisir une rencontre</option>
-                        <?php
-                // foreach (getRencontresData($cnx) as $data) {
-                //     getRencontresIntoSelect($cnx);
-                // }
-                ?>
-                    </select> -->
-                <div class="scoresManuel">
-                    <h3 id="idRencontre">Rencontre</h3>
-                    <div class="score1 score-container">
-                        <select id="dateSelectRencontre" name="date">
-                            <?php
-                            getDatesRencontre();
-                            ?>
-                        </select>
-                        <select name="selectEquipe1" id="selEquipe1">
-                            <option value="0">Choisir une équipe Domicile</option>
-                            <?php
-                            getClubIntoSelect();
-                            ?>
-                        </select><br><br>
-                        <input type="number" name="score1" id="score1" class="scoreInput" value="0">
-                    </div>
-                    <div class="score-container">
-                        <select name="selectEquipe2" id="selEquipe2">
-                            <option value="0">Choisir une équipe Visiteur</option>
-                            <?php
-                            getClubIntoSelect();
-                            ?>
-                        </select><br><br>
-                        <input type="number" name="score2" id="score2" class="scoreInput" value="0">
-                    </div>
-                    <input type="submit" value="Valider">
-                </div>
-            </form>
-        </div>
-        <div class="dashboard-container">
-            <h2>Saisie des scores automatique</h2>
-            <div class="scoreAuto">
-                <form action="envoyerScoreAuto.php" method="POST">
-                    <select id="dateSelectRencontre" name="date">
-                        <?php
-                        getDatesRencontre();
-                        ?>
-                    </select>
-                    <input type="submit" value="Valider">
-                </form>
-            </div>
         </div>
     </div>
 </div>
