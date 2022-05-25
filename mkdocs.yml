@@ -8,6 +8,7 @@ nav:
     - Home: index.md
     - Utilisation :
         - Panel admin: pages/admin.md
+        - Utilisateur : pages/utilisateur.md
 
 theme:
     name: material
