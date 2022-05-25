@@ -54,10 +54,10 @@ alter function generate_saison(integer, integer) owner to postgres;
 
 ```
 
-### les renctontres
+### les rencontres
 
-Après avoir générer la saisons il faut enregistrer les match. Toutes les semaines un match est jouer par tout les clubs.  
-On initialise également les match retour.
+Après avoir générer la saisons il faut enregistrer les match. Toutes les semaines un match est joué par tout les clubs.  
+On initialise également les matchs retours.
 
 ```sql
 create function generate_rencontre(idchamp integer, datematch date) returns boolean
