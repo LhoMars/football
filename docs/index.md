@@ -13,8 +13,8 @@ Ce diagramme présente les fonctionnalités disponibles sur l'application
 
 ```mermaid
 graph TB
-intialise(intialise un championnat)
-intialise2(intialise les rencontres)
+intialiseC(intialise un championnat)
+intialiseR(intialise les rencontres)
 connection(Se connecter)
 connectionAdmin(Se connecter en tant qu'admin)
 commente(commente un article)
@@ -26,8 +26,8 @@ Admin:::user --> connectionAdmin
 Utilisateur:::user --> connection 
     classDef user fill:#3355ff;
     
-connectionAdmin -- <<extend>> --> intialise
-connectionAdmin -- <<extend>> --> intialise2
+connectionAdmin -- <<extend>> --> intialiseC
+connectionAdmin -- <<extend>> --> intialiseR
 connection -- <<extends>> --> connection
 serveurBdd <--> intialise
 ```
